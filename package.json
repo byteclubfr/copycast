@@ -1,0 +1,13 @@
+{
+  "name": "copycast",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "Delapouite <delapouite@gmail.com> (http://delapouite.com)",
+  "license": "ISC",
+  "dependencies": {
+    "chokidar": "^1.4.2"
+  }
+}

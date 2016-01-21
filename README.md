@@ -1,0 +1,5 @@
+# copycast
+
+## License
+
+ISC
