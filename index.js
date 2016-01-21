@@ -1,6 +1,8 @@
 var fs = require('fs')
 var P = require('path')
 var chokidar = require('chokidar')
+var server = require('http').createServer()
+var io = require('socket.io')(server)
 
 // state
 var tree = {
@@ -9,7 +11,7 @@ var tree = {
 	children: []
 }
 
-// utils
+// watcher utils
 var createDir = (name) => ({ name, children: [] })
 var createFile = (name, content) => ({ name, content })
 var getChildren = (path) => {
@@ -32,7 +34,8 @@ var deleteChild = (path) => {
 	)
 	return children
 }
-var printTree = () => console.log(JSON.stringify(tree, null, 2))
+// var printTree = () => console.log(JSON.stringify(tree, null, 2))
+var printTree = () => broadcastTree()
 
 // events
 chokidar.watch('test', {
@@ -84,3 +87,33 @@ chokidar.watch('test', {
 })
 .on('error', (error) => console.log(`Watcher error: ${error}`))
 .on('ready', () => console.log('Initial scan complete. Ready for changes'))
+
+// http utils
+var sendFile = (res, name, mime) => {
+	res.writeHead(200, {'Content-Type': mime})
+	fs.readFile(`client${name}`, 'utf8', (err, content) => {
+		if (err) throw err
+		res.end(content)
+	})
+}
+var broadcastTree = () => io.emit('tree', tree)
+
+// http
+const clientFiles = {
+	'/index.html': 'text/html',
+	'/client.js': 'application/javascript'
+}
+
+server.on('request', (req, res) => {
+	var url = req.url === '/' ? '/index.html' : req.url
+	if (clientFiles[url]) sendFile(res, url, clientFiles[url])
+})
+server.listen(42000)
+
+// socket
+io.on('connection', (socket) => {
+	console.log('connection')
+	socket.on('disconnect', () => {
+		console.log('disconnection')
+	})
+})
