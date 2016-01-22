@@ -103,17 +103,22 @@ const clientFiles = {
 	'/index.html': 'text/html',
 	'/bundle.js': 'application/javascript'
 }
+const PORT = 42000
 
 server.on('request', (req, res) => {
 	var url = req.url === '/' ? '/index.html' : req.url
 	if (clientFiles[url]) sendFile(res, url, clientFiles[url])
+	// else res.end()
 })
-server.listen(42000)
+server.listen(PORT)
+console.log(`HTTP listening on ${PORT}`)
 
 // socket
 io.on('connection', (socket) => {
-	console.log('connection')
+	var ip = socket.request.connection.remoteAddress
+	console.log('socket connection', ip)
+	printTree()
 	socket.on('disconnect', () => {
-		console.log('disconnection')
+		console.log('socket disconnection', ip)
 	})
 })
