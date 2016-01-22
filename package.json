@@ -12,6 +12,7 @@
   "dependencies": {
     "@cycle/core": "^6.0.0",
     "@cycle/dom": "^9.0.1",
+    "@cycle/isolate": "^1.2.0",
     "chokidar": "^1.4.2",
     "rx": "^4.0.7",
     "socket.io": "^1.4.4"

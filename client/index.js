@@ -1,23 +1,46 @@
-import Rx from 'rx'
+import { Observable } from 'rx'
 import Cycle from '@cycle/core'
-import {pre, makeDOMDriver} from '@cycle/dom'
+import {aside, ul, li, makeDOMDriver} from '@cycle/dom'
+import isolate from '@cycle/isolate'
+
 var socket = io.connect()
 
 socket.on('connect', () => console.log('connected'))
 socket.on('disconnect', (err) => console.error('disconnected', err))
 socket.on('error', (err) => console.error('error', err))
-
 socket.on('tree', (tree) => console.log(tree))
 
-function main({ DOM, socketIO }) {
-	const vtree$ = socketIO.get('tree')
-			.startWith('Loading…')
-			.map(payload => pre(JSON.stringify(payload, null, 2)))
+function main({ socketIO }) {
+	const res$ = socketIO.get('tree').startWith('Loading…')
+	const sidebar = Sidebar({ res$ })
 
+	return {
+		DOM: sidebar.DOM
+	}
+}
+
+// components
+
+function Sidebar ({ res$ }) {
+	const vtree$ = res$
+			.map(payload =>
+					 aside(Dir(payload)))
 	return {
 		DOM: vtree$
 	}
 }
+
+function Dir (branch) {
+	if (!branch.children) return branch
+	const branches = branch.children.map((child) => {
+		if (child.children) return Dir(child)
+		return li('.filename', child.name)
+	})
+	return ul('.dir',
+		[li('.dirname', branch.name)].concat(branches)
+	)
+}
+
 
 Cycle.run(main, {
 	DOM: makeDOMDriver('#app'),
@@ -26,7 +49,7 @@ Cycle.run(main, {
 
 function createSocketIODriver() {
 	function get(eventName) {
-		return Rx.Observable.create(observer => {
+		return Observable.create(observer => {
 			const sub = socket.on(eventName, function (message) {
 				observer.onNext(message)
 			})
