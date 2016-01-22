@@ -101,6 +101,7 @@ var broadcastTree = () => io.emit('tree', tree)
 // http
 const clientFiles = {
 	'/index.html': 'text/html',
+	'/index.css': 'text/css',
 	'/bundle.js': 'application/javascript'
 }
 const PORT = 42000
