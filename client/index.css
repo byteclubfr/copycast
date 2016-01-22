@@ -2,11 +2,14 @@ body {
 	background: white;
 	color: #333;
 	font-family: sans;
+	padding: 0;
+	margin: 0;
 }
 
 h1 {
 	font-weight: normal;
 	letter-spacing: 0.2em;
+	margin: 0.2em;
 }
 
 #app {
@@ -34,4 +37,9 @@ h1 {
 
 .filename {
 	margin-left: 1em;
+}
+
+.editor {
+	flex-grow: 1;
+	padding: 0.5em;
 }

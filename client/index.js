@@ -1,7 +1,8 @@
 import { Observable } from 'rx'
 import Cycle from '@cycle/core'
-import {aside, ul, li, makeDOMDriver} from '@cycle/dom'
-import isolate from '@cycle/isolate'
+import {aside, div, ul, li, makeDOMDriver} from '@cycle/dom'
+
+import createSocketIODriver from './cycle-socket.io'
 
 var socket = io.connect()
 
@@ -12,10 +13,16 @@ socket.on('tree', (tree) => console.log(tree))
 
 function main({ socketIO }) {
 	const res$ = socketIO.get('tree').startWith('Loading…')
-	const sidebar = Sidebar({ res$ })
+	const vtree$ = Observable.just()
+		.map(() =>
+				 div('#app', [
+					Sidebar({ res$ }).DOM,
+					Editor({ res$ }).DOM
+				])
+		)
 
 	return {
-		DOM: sidebar.DOM
+		DOM: vtree$
 	}
 }
 
@@ -23,8 +30,7 @@ function main({ socketIO }) {
 
 function Sidebar ({ res$ }) {
 	const vtree$ = res$
-			.map(payload =>
-					 aside('.sidebar', Dir(payload)))
+			.map(payload => aside('.sidebar', Dir(payload)))
 	return {
 		DOM: vtree$
 	}
@@ -41,33 +47,15 @@ function Dir (branch) {
 	)
 }
 
-
-Cycle.run(main, {
-	DOM: makeDOMDriver('#app'),
-	socketIO: createSocketIODriver()
-})
-
-function createSocketIODriver() {
-	function get(eventName) {
-		return Observable.create(observer => {
-			const sub = socket.on(eventName, function (message) {
-				observer.onNext(message)
-			})
-			return function dispose() {
-				sub.dispose()
-			}
-		})
-	}
-
-	function publish(messageType, message) {
-		socket.emit(messageType, message)
-	}
-
-	return function socketIODriver(events$) {
-		events$.forEach(event => publish(event.messageType, event.message))
-		return {
-			get,
-			dispose: socket.destroy.bind(socket)
-		}
+function Editor ({ res$ }) {
+	const vtree$ = res$
+		.map(payload => div('.editor', 'Editor'))
+	return {
+		DOM: vtree$
 	}
 }
+
+Cycle.run(main, {
+	DOM: makeDOMDriver('#root'),
+	socketIO: createSocketIODriver(socket)
+})
