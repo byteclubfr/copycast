@@ -101,7 +101,7 @@ var broadcastTree = () => io.emit('tree', tree)
 // http
 const clientFiles = {
 	'/index.html': 'text/html',
-	'/client.js': 'application/javascript'
+	'/bundle.js': 'application/javascript'
 }
 
 server.on('request', (req, res) => {
