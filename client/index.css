@@ -1,6 +1,37 @@
-.dir {
-	margin: 0
+body {
+	background: white;
+	color: #333;
+	font-family: sans;
 }
+
+h1 {
+	font-weight: normal;
+	letter-spacing: 0.2em;
+}
+
+#app {
+	display: flex;
+}
+
+.sidebar {
+	background: #EEE;
+	padding: 0.5em;
+}
+
+.sidebar > .dir {
+	padding: 0;
+}
+
+.dir {
+	list-style: none;
+	margin: 0;
+	padding-left: 1em;
+}
+
+.dirname {
+	font-weight: bold;
+}
+
 .filename {
-	margin-left: 2em;
+	margin-left: 1em;
 }

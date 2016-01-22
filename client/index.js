@@ -24,7 +24,7 @@ function main({ socketIO }) {
 function Sidebar ({ res$ }) {
 	const vtree$ = res$
 			.map(payload =>
-					 aside(Dir(payload)))
+					 aside('.sidebar', Dir(payload)))
 	return {
 		DOM: vtree$
 	}
