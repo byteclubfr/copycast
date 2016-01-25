@@ -26,22 +26,24 @@ copycast = file system watcher + websocket server + live webclient
 ## Install
 
 ```sh
-npm i
-```
-
-To build the client :
-```sh
-npm run watch
+npm i -g copycast
 ```
 
 ## Usage
 
-Start the server
 ```
-node index.js
+copycast -d YOUR_DIR -p YOUR_PORT
 ```
 
-Open `localhost:42000` in your browser
+Open `localhost:YOUR_PORT` in a web browser
+
+## Dev
+
+To build the client :
+```sh
+npm i
+npm run watch
+```
 
 ## License
 
