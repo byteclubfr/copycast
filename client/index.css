@@ -36,10 +36,19 @@ h1 {
 }
 
 .filename {
+	cursor: pointer;
 	margin-left: 1em;
+}
+
+.filename.selected {
+	background: #DDD;
 }
 
 .editor {
 	flex-grow: 1;
 	padding: 0.5em;
+}
+
+.editor pre {
+	margin: 0;
 }
