@@ -5,6 +5,14 @@ var chokidar = require('chokidar')
 var server = require('http').createServer()
 var io = require('socket.io')(server)
 
+// TODO use destructuring when available
+var tw = require('./server/tree-walking')
+var createDir = tw.createDir
+var createFile = tw.createFile
+var getChildren = tw.getChildren
+var addChild = tw.addChild
+var deleteChild = tw.deleteChild
+
 const PATH = '.'
 
 // state
@@ -14,31 +22,7 @@ var tree = {
 	children: []
 }
 
-// watcher utils
-var createDir = (name) => ({ name, children: [] })
-var createFile = (name, content) => ({ name, content })
-var getChildren = (tree, path) => {
-	var children = tree.children
-	path.split('/').forEach((dir) => {
-		var child = children.find(c => c.name === dir)
-		if (child) children = child.children
-	})
-	return children
-}
-var addChild = (children, child) => {
-	children.push(child)
-	children.sort((a, b) => a.name > b.name)
-}
-var deleteChild = (tree, path) => {
-	var children = getChildren(tree, P.dirname(path))
-	children.splice(
-		children.findIndex(c => c.name === P.basename(path)),
-		1
-	)
-	return children
-}
-// var printTree = () => console.log(JSON.stringify(tree, null, 2))
-var printTree = () => broadcastTree()
+var printTree = (tree) => broadcastTree(tree)
 
 // events
 chokidar.watch(PATH, {
@@ -53,7 +37,7 @@ chokidar.watch(PATH, {
 		getChildren(tree, path),
 		createDir(P.basename(path))
 	)
-	printTree()
+	printTree(tree)
 })
 .on('add', (path) => {
 	console.log(`+ f ${path}`)
@@ -63,20 +47,20 @@ chokidar.watch(PATH, {
 			getChildren(tree, P.dirname(path)),
 			createFile(P.basename(path), content)
 		)
-		printTree()
+		printTree(tree)
 	})
 })
 .on('unlinkDir', (path) => {
 	console.log(`- d ${path}`)
 
 	deleteChild(tree, path)
-	printTree()
+	printTree(tree)
 })
 .on('unlink', (path) => {
 	console.log(`- f ${path}`)
 
 	deleteChild(tree, path)
-	printTree()
+	printTree(tree)
 })
 .on('change', (path) => {
 	console.log(`= f ${path}`)
@@ -85,7 +69,7 @@ chokidar.watch(PATH, {
 		getChildren(tree, P.dirname(path))
 			.find(c => c.name === P.basename(path))
 			.content = content
-		printTree()
+		printTree(tree)
 	})
 })
 .on('error', (error) => console.log(`Watcher error: ${error}`))
@@ -99,7 +83,7 @@ var sendFile = (res, name, mime) => {
 		res.end(content)
 	})
 }
-var broadcastTree = () => io.emit('tree', tree)
+var broadcastTree = (tree) => io.emit('tree', tree)
 
 // http
 const displayAddresses = () => {
@@ -130,7 +114,7 @@ displayAddresses()
 io.on('connection', (socket) => {
 	var ip = socket.request.connection.remoteAddress
 	console.log('socket connection', ip)
-	printTree()
+	printTree(tree)
 	socket.on('disconnect', () => {
 		console.log('socket disconnection', ip)
 	})
