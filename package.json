@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "watch": "watchify client/index.js -o client/bundle.js -t [ babelify --presets [ es2015 ] ]"
+    "watch": "watchify client/index.js --debug -o client/bundle.js -t [ babelify --presets [ es2015 ] ]"
   },
   "keywords": [],
   "author": "Delapouite <delapouite@gmail.com> (http://delapouite.com)",
