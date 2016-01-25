@@ -10,7 +10,7 @@ var getChildren = tw.getChildren
 var addChild = tw.addChild
 var deleteChild = tw.deleteChild
 
-exports.getWatcher = (path, tree, done) =>
+exports.createWatcher = (path, tree, done) =>
 	chokidar.watch(path, {
 		ignored: /node_modules|\.git/,
 		persistent: true
