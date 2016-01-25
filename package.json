@@ -1,12 +1,13 @@
 {
   "name": "copycast",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Live remote copy-pasta explorer for training sessions ",
+  "bin": {
+    "copycast": "bin/copycast.js"
+  },
   "scripts": {
     "watch": "watchify client/index.js --debug -o client/bundle.js -t [ babelify --presets [ es2015 ] ]"
   },
-  "keywords": [],
   "author": "Delapouite <delapouite@gmail.com> (http://delapouite.com)",
   "license": "ISC",
   "dependencies": {
@@ -14,6 +15,7 @@
     "@cycle/dom": "^9.0.1",
     "@cycle/isolate": "^1.2.0",
     "chokidar": "^1.4.2",
+    "minimist": "^1.2.0",
     "rx": "^4.0.7",
     "socket.io": "^1.4.4"
   },
