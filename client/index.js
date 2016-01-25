@@ -1,25 +1,64 @@
 import { Observable } from 'rx'
-import Cycle from '@cycle/core'
-import {aside, div, ul, li, makeDOMDriver} from '@cycle/dom'
+import { run } from '@cycle/core'
+import {aside, div, ul, li, pre, makeDOMDriver} from '@cycle/dom'
 
-import createSocketIODriver from './cycle-socket.io'
+import createSocketIODriver from './drivers/cycle-socket.io'
 
 var socket = io.connect()
 
 socket.on('connect', () => console.log('connected'))
 socket.on('disconnect', (err) => console.error('disconnected', err))
 socket.on('error', (err) => console.error('error', err))
-socket.on('tree', (tree) => console.log(tree))
+socket.on('tree', (tree) => console.debug(tree))
 
-function main({ socketIO }) {
-	const res$ = socketIO.get('tree').startWith('Loading…')
-	const vtree$ = Observable.just()
-		.map(() =>
-				 div('#app', [
-					Sidebar({ res$ }).DOM,
-					Editor({ res$ }).DOM
-				])
-		)
+// tree walking
+
+const getChildren = (payload, path) => {
+	let children = payload.children
+	path.forEach((dir) => {
+		const child = children.find(c => c.name === dir)
+		if (child) children = child.children
+	})
+	return children
+}
+
+const getContent = (payload, selected) => {
+	if (!selected) return null
+
+	let path = selected.split('-')
+	// remove 'root'
+	path.shift()
+	path.shift()
+	let ext = path.pop()
+	let filename = `${path.pop()}.${ext}`
+
+	const file = getChildren(payload, path).find(c => c.name === filename)
+	return file ? file.content : null
+}
+
+function main({ DOM, socketIO }) {
+	// from server's watcher
+	const res$ = socketIO.get('tree')
+
+	const selected$ = DOM.select('.sidebar .filename').events('click')
+		.map(ev => ev.target.id)
+		.startWith(null)
+
+	const state$ = Observable.combineLatest(
+		res$, selected$,
+		(payload, selected) => {
+			const content = getContent(payload, selected)
+			return { payload, selected, content }
+		})
+
+	const vtree$ = state$.map(
+		({ payload, selected, content }) => {
+			return div('#app', [
+				Sidebar({ DOM, payload, selected }).DOM,
+				Editor({ content }).DOM
+			])
+		}
+	)
 
 	return {
 		DOM: vtree$
@@ -28,34 +67,41 @@ function main({ socketIO }) {
 
 // components
 
-function Sidebar ({ res$ }) {
-	const vtree$ = res$
-			.map(payload => aside('.sidebar', Dir(payload)))
+function Sidebar ({ DOM, payload, selected }) {
 	return {
-		DOM: vtree$
+		DOM: aside('.sidebar', Dir({ DOM, path: 'root', tree: payload, selected }).DOM)
 	}
 }
 
-function Dir (branch) {
-	if (!branch.children) return branch
-	const branches = branch.children.map((child) => {
-		if (child.children) return Dir(child)
-		return li('.filename', child.name)
+function Dir ({ DOM, path, tree, selected }) {
+	if (!tree || !tree.children) return
+
+	path = `${path}-${tree.name}`
+	const trees = tree.children.map((child) => {
+		return (child.children)
+			? Dir({ DOM, path, tree: child, selected }).DOM
+			: File({ DOM, path, name: child.name, selected }).DOM
 	})
-	return ul('.dir',
-		[li('.dirname', branch.name)].concat(branches)
-	)
+	return {
+		DOM: ul('.dir', [li('.dirname', tree.name), ...trees])
+	}
 }
 
-function Editor ({ res$ }) {
-	const vtree$ = res$
-		.map(payload => div('.editor', 'Editor'))
+function File ({ DOM, path, name, selected }) {
+	const id = `${path}-${name.replace('.', '-')}`
+	return {
+		DOM: li(`#${id}.filename${ selected === id ? '.selected' : '' }`, name)
+	}
+}
+
+function Editor ({ content }) {
+	const vtree$ = div('.editor', pre(content))
 	return {
 		DOM: vtree$
 	}
 }
 
-Cycle.run(main, {
+run(main, {
 	DOM: makeDOMDriver('#root'),
 	socketIO: createSocketIODriver(socket)
 })
