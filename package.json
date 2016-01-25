@@ -6,8 +6,17 @@
     "copycast": "bin/copycast.js"
   },
   "scripts": {
+    "prepublish": "npm run build",
+    "build": "browserify client/index.js --debug -o client/bundle.js -t [ babelify --presets [ es2015 ] ]",
     "watch": "watchify client/index.js --debug -o client/bundle.js -t [ babelify --presets [ es2015 ] ]"
   },
+  "files": [
+    "bin",
+    "client/bundle.js",
+    "client/index.css",
+    "client/index.html",
+    "server"
+  ],
   "author": "Delapouite <delapouite@gmail.com> (http://delapouite.com)",
   "license": "ISC",
   "dependencies": {
@@ -22,6 +31,7 @@
   "devDependencies": {
     "babel-preset-es2015": "^6.3.13",
     "babelify": "^7.2.0",
+    "browserify": "^13.0.0",
     "watchify": "^3.7.0"
   }
 }
