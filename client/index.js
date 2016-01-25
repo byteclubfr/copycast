@@ -13,6 +13,8 @@ socket.on('tree', (tree) => console.debug(tree))
 
 // tree walking
 
+const PATH_SEP = '|'
+
 const getChildren = (payload, path) => {
 	let children = payload.children
 	path.forEach((dir) => {
@@ -25,12 +27,11 @@ const getChildren = (payload, path) => {
 const getContent = (payload, selected) => {
 	if (!selected) return null
 
-	let path = selected.split('-')
+	let path = selected.split(PATH_SEP)
 	// remove 'root'
 	path.shift()
 	path.shift()
-	let ext = path.pop()
-	let filename = `${path.pop()}.${ext}`
+	let filename = path.pop()
 
 	const file = getChildren(payload, path).find(c => c.name === filename)
 	return file ? file.content : null
@@ -41,7 +42,7 @@ function main({ DOM, socketIO }) {
 	const res$ = socketIO.get('tree')
 
 	const selected$ = DOM.select('.sidebar .filename').events('click')
-		.map(ev => ev.target.id)
+		.map(ev => ev.target.data.id)
 		.startWith(null)
 
 	const state$ = Observable.combineLatest(
@@ -76,7 +77,7 @@ function Sidebar ({ DOM, payload, selected }) {
 function Dir ({ DOM, path, tree, selected }) {
 	if (!tree || !tree.children) return
 
-	path = `${path}-${tree.name}`
+	path = `${path}${PATH_SEP}${tree.name}`
 	const trees = tree.children.map((child) => {
 		return (child.children)
 			? Dir({ DOM, path, tree: child, selected }).DOM
@@ -88,9 +89,10 @@ function Dir ({ DOM, path, tree, selected }) {
 }
 
 function File ({ DOM, path, name, selected }) {
-	const id = `${path}-${name.replace('.', '-')}`
+	const id = `${path}${PATH_SEP}${name}`
+	const attrs = {data: { id }}
 	return {
-		DOM: li(`#${id}.filename${ selected === id ? '.selected' : '' }`, name)
+		DOM: li(`.filename${ selected === id ? '.selected' : '' }`, attrs, name)
 	}
 }
 
