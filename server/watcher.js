@@ -10,7 +10,7 @@ var getChildren = tw.getChildren
 var addChild = tw.addChild
 var deleteChild = tw.deleteChild
 
-exports.getWatcher = (path, tree, printTree) =>
+exports.getWatcher = (path, tree, done) =>
 	chokidar.watch(path, {
 		ignored: /node_modules|\.git/,
 		persistent: true
@@ -23,7 +23,7 @@ exports.getWatcher = (path, tree, printTree) =>
 			getChildren(tree, path),
 			createDir(P.basename(path))
 		)
-		printTree(tree)
+		done(tree)
 	})
 	.on('add', (path) => {
 		console.log(`+ f ${path}`)
@@ -33,20 +33,20 @@ exports.getWatcher = (path, tree, printTree) =>
 				getChildren(tree, P.dirname(path)),
 				createFile(P.basename(path), content)
 			)
-			printTree(tree)
+			done(tree)
 		})
 	})
 	.on('unlinkDir', (path) => {
 		console.log(`- d ${path}`)
 
 		deleteChild(tree, path)
-		printTree(tree)
+		done(tree)
 	})
 	.on('unlink', (path) => {
 		console.log(`- f ${path}`)
 
 		deleteChild(tree, path)
-		printTree(tree)
+		done(tree)
 	})
 	.on('change', (path) => {
 		console.log(`= f ${path}`)
@@ -55,7 +55,7 @@ exports.getWatcher = (path, tree, printTree) =>
 			getChildren(tree, P.dirname(path))
 				.find(c => c.name === P.basename(path))
 				.content = content
-			printTree(tree)
+			done(tree)
 		})
 	})
 	.on('error', (error) => console.log(`Watcher error: ${error}`))

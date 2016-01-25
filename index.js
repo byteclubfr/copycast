@@ -14,9 +14,9 @@ var tree = {
 	children: []
 }
 
-var printTree = (tree) => broadcastTree(tree)
+var broadcastTree = (tree) => io.emit('tree', tree)
 
-getWatcher(PATH, tree, printTree)
+getWatcher(PATH, tree, broadcastTree)
 
 // http utils
 var sendFile = (res, name, mime) => {
@@ -26,7 +26,6 @@ var sendFile = (res, name, mime) => {
 		res.end(content)
 	})
 }
-var broadcastTree = (tree) => io.emit('tree', tree)
 
 // http
 const displayAddresses = () => {
@@ -57,7 +56,7 @@ displayAddresses()
 io.on('connection', (socket) => {
 	var ip = socket.request.connection.remoteAddress
 	console.log('socket connection', ip)
-	printTree(tree)
+	broadcastTree(tree)
 	socket.on('disconnect', () => {
 		console.log('socket disconnection', ip)
 	})
