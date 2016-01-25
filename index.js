@@ -17,7 +17,7 @@ var tree = {
 // watcher utils
 var createDir = (name) => ({ name, children: [] })
 var createFile = (name, content) => ({ name, content })
-var getChildren = (path) => {
+var getChildren = (tree, path) => {
 	var children = tree.children
 	path.split('/').forEach((dir) => {
 		var child = children.find(c => c.name === dir)
@@ -29,8 +29,8 @@ var addChild = (children, child) => {
 	children.push(child)
 	children.sort((a, b) => a.name > b.name)
 }
-var deleteChild = (path) => {
-	var children = getChildren(P.dirname(path))
+var deleteChild = (tree, path) => {
+	var children = getChildren(tree, P.dirname(path))
 	children.splice(
 		children.findIndex(c => c.name === P.basename(path)),
 		1
@@ -50,7 +50,7 @@ chokidar.watch(PATH, {
 	if (path === '.') return
 
 	addChild(
-		getChildren(path),
+		getChildren(tree, path),
 		createDir(P.basename(path))
 	)
 	printTree()
@@ -60,7 +60,7 @@ chokidar.watch(PATH, {
 
 	fs.readFile(path, 'utf8', (err, content) => {
 		addChild(
-			getChildren(P.dirname(path)),
+			getChildren(tree, P.dirname(path)),
 			createFile(P.basename(path), content)
 		)
 		printTree()
@@ -69,20 +69,20 @@ chokidar.watch(PATH, {
 .on('unlinkDir', (path) => {
 	console.log(`- d ${path}`)
 
-	deleteChild(path)
+	deleteChild(tree, path)
 	printTree()
 })
 .on('unlink', (path) => {
 	console.log(`- f ${path}`)
 
-	deleteChild(path)
+	deleteChild(tree, path)
 	printTree()
 })
 .on('change', (path) => {
 	console.log(`= f ${path}`)
 
 	fs.readFile(path, 'utf8', (err, content) => {
-		getChildren(P.dirname(path))
+		getChildren(tree, P.dirname(path))
 			.find(c => c.name === P.basename(path))
 			.content = content
 		printTree()
