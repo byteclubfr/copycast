@@ -1,6 +1,9 @@
+var path = require('path')
 var fs = require('fs')
 var os = require('os')
 var http = require('http')
+
+const clientPath = path.resolve(`${__dirname}/../client`)
 
 const clientFiles = {
 	'/index.html': 'text/html',
@@ -12,7 +15,7 @@ const clientFiles = {
 
 const sendFile = (res, name, mime) => {
 	res.writeHead(200, {'Content-Type': mime})
-	fs.readFile(`client${name}`, 'utf8', (err, content) => {
+	fs.readFile(`${clientPath}${name}`, 'utf8', (err, content) => {
 		if (err) throw err
 		res.end(content)
 	})
