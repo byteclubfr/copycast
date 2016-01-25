@@ -4,6 +4,8 @@ var chokidar = require('chokidar')
 var server = require('http').createServer()
 var io = require('socket.io')(server)
 
+const PATH = '.'
+
 // state
 var tree = {
 	name: 'root',
@@ -38,8 +40,8 @@ var deleteChild = (path) => {
 var printTree = () => broadcastTree()
 
 // events
-chokidar.watch('test', {
-	ignored: /node_modules/,
+chokidar.watch(PATH, {
+	ignored: /node_modules|\.git/,
 	persistent: true
 })
 .on('addDir', (path) => {
