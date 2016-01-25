@@ -1,7 +1,7 @@
 body {
 	background: white;
 	color: #333;
-	font-family: sans;
+	font-family: Arial, sans;
 	padding: 0;
 	margin: 0;
 }
@@ -35,13 +35,23 @@ h1 {
 	font-weight: bold;
 }
 
-.filename {
+.file {
 	cursor: pointer;
+	display: flex;
 	margin-left: 1em;
 }
 
-.filename.selected {
+.file.selected {
 	background: #DDD;
+}
+
+.filename {
+	flex-grow: 1;
+}
+
+.elapsed {
+	color: #999;
+	text-align: right;
 }
 
 .editor {

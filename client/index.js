@@ -1,6 +1,6 @@
 import { Observable } from 'rx'
 import { run } from '@cycle/core'
-import {aside, div, ul, li, pre, makeDOMDriver} from '@cycle/dom'
+import { aside, div, ul, li, pre, span, makeDOMDriver } from '@cycle/dom'
 
 import createSocketIODriver from './drivers/cycle-socket.io'
 
@@ -38,15 +38,17 @@ const getContent = (payload, selected) => {
 }
 
 function main({ DOM, socketIO }) {
+	// to refresh elapsed counter regularly
+	const elapsed$ = Observable.timer(0, 5000)
 	// from server's watcher
 	const res$ = socketIO.get('tree')
 
-	const selected$ = DOM.select('.sidebar .filename').events('click')
+	const selected$ = DOM.select('.sidebar .file').events('click')
 		.map(ev => ev.target.data.id)
 		.startWith(null)
 
 	const state$ = Observable.combineLatest(
-		res$, selected$,
+		res$, selected$, elapsed$,
 		(payload, selected) => {
 			const content = getContent(payload, selected)
 			return { payload, selected, content }
@@ -81,18 +83,28 @@ function Dir ({ DOM, path, tree, selected }) {
 	const trees = tree.children.map((child) => {
 		return (child.children)
 			? Dir({ DOM, path, tree: child, selected }).DOM
-			: File({ DOM, path, name: child.name, selected }).DOM
+			: File({ DOM, path, file: child, selected }).DOM
 	})
 	return {
 		DOM: ul('.dir', [li('.dirname', tree.name), ...trees])
 	}
 }
 
-function File ({ DOM, path, name, selected }) {
+function File ({ DOM, path, file, selected }) {
+	const { name, updatedAt } = file
 	const id = `${path}${PATH_SEP}${name}`
-	const attrs = {data: { id }}
+	let elapsed = ''
+	if (updatedAt) {
+		let ago = Math.round((Date.now() - updatedAt) / 1000)
+		if (ago <= 180) {
+			elapsed = `${ago}s`
+		}
+	}
 	return {
-		DOM: li(`.filename${ selected === id ? '.selected' : '' }`, attrs, name)
+		DOM: li(`.file${ selected === id ? '.selected' : '' }`, [
+			span('.filename', { data: { id } }, name),
+			span('.elapsed', { data: { id } }, elapsed)
+		])
 	}
 }
 

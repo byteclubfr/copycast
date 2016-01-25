@@ -52,13 +52,14 @@ exports.createWatcher = (path, tree, done) =>
 		deleteChild(tree, path)
 		done(tree)
 	})
-	.on('change', (path) => {
+	.on('change', (path, stats) => {
 		console.log(`= f ${path}`)
 
 		fs.readFile(path, 'utf8', (err, content) => {
-			getChildren(tree, P.dirname(path))
+			const c = getChildren(tree, P.dirname(path))
 				.find(c => c.name === P.basename(path))
-				.content = content
+			c.content = content
+			c.updatedAt = stats.mtime.getTime()
 			done(tree)
 		})
 	})
