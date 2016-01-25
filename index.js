@@ -1,3 +1,4 @@
+var os = require('os')
 var fs = require('fs')
 var P = require('path')
 var chokidar = require('chokidar')
@@ -101,6 +102,15 @@ var sendFile = (res, name, mime) => {
 var broadcastTree = () => io.emit('tree', tree)
 
 // http
+const displayAddresses = () => {
+	const interfaces = os.networkInterfaces()
+	Object.keys(interfaces).forEach((dev) => {
+		interfaces[dev].forEach((details) => {
+			if (details.family !== 'IPv4') return
+			console.log('http://' + details.address + ':' + PORT)
+		})
+	})
+}
 const clientFiles = {
 	'/index.html': 'text/html',
 	'/index.css': 'text/css',
@@ -114,7 +124,7 @@ server.on('request', (req, res) => {
 	// else res.end()
 })
 server.listen(PORT)
-console.log(`HTTP listening on ${PORT}`)
+displayAddresses()
 
 // socket
 io.on('connection', (socket) => {
