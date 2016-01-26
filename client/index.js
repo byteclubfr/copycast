@@ -1,6 +1,7 @@
 import { Observable } from 'rx'
 import { run } from '@cycle/core'
-import { aside, div, ul, li, pre, span, makeDOMDriver } from '@cycle/dom'
+import { aside, div, ul, li, pre,
+	code, span, makeDOMDriver } from '@cycle/dom'
 
 import createSocketIODriver from './drivers/cycle-socket.io'
 
@@ -108,8 +109,11 @@ function File ({ DOM, path, file, selected }) {
 	}
 }
 
+// beware, if content is markdown, it can start with a #
+// which will be interpreted as a CSS id selector
 function Editor ({ content }) {
-	const vtree$ = div('.editor', pre(content))
+	const vtree$ = div('.editor', pre(
+										code('.editor-code', content)))
 	return {
 		DOM: vtree$
 	}
