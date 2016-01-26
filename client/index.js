@@ -147,6 +147,7 @@ run(main, {
 	socketIO: createSocketIODriver(socket),
 	hljs: (selected$) => selected$.subscribe((v) => {
 		if (!v) return
-		hljs.highlightBlock(document.querySelector('.editor-code'))
+		// TODO better cohabitation with vdom
+		// hljs.highlightBlock(document.querySelector('.editor-code'))
 	})
 })
