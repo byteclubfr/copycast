@@ -5,7 +5,7 @@ import { aside, div, ul, li, pre,
 
 import createSocketIODriver from './drivers/cycle-socket.io'
 
-var socket = io.connect()
+var socket = io.connect() // eslint-disable-line
 
 socket.on('connect', () => console.log('connected'))
 socket.on('disconnect', (err) => console.error('disconnected', err))
@@ -58,7 +58,7 @@ function main({ DOM, socketIO }) {
 	const vtree$ = state$.map(
 		({ payload, selected, content }) => {
 			return div('#app', [
-				Sidebar({ DOM, payload, selected }).DOM,
+				Sidebar({ payload, selected }).DOM,
 				Editor({ content }).DOM
 			])
 		}
@@ -71,27 +71,27 @@ function main({ DOM, socketIO }) {
 
 // components
 
-function Sidebar ({ DOM, payload, selected }) {
+function Sidebar ({ payload, selected }) {
 	return {
-		DOM: aside('.sidebar', Dir({ DOM, path: 'root', tree: payload, selected }).DOM)
+		DOM: aside('.sidebar', Dir({ path: 'root', tree: payload, selected }).DOM)
 	}
 }
 
-function Dir ({ DOM, path, tree, selected }) {
+function Dir ({ path, tree, selected }) {
 	if (!tree || !tree.children) return
 
 	path = `${path}${PATH_SEP}${tree.name}`
 	const trees = tree.children.map((child) => {
 		return (child.children)
-			? Dir({ DOM, path, tree: child, selected }).DOM
-			: File({ DOM, path, file: child, selected }).DOM
+			? Dir({ path, tree: child, selected }).DOM
+			: File({ path, file: child, selected }).DOM
 	})
 	return {
 		DOM: ul('.dir', [li('.dirname', tree.name), ...trees])
 	}
 }
 
-function File ({ DOM, path, file, selected }) {
+function File ({ path, file, selected }) {
 	const { name, updatedAt } = file
 	const id = `${path}${PATH_SEP}${name}`
 	let elapsed = ''
