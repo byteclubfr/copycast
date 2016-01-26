@@ -6,14 +6,21 @@ body {
 	margin: 0;
 }
 
-h1 {
+h1, h2 {
 	font-weight: normal;
 	letter-spacing: 0.2em;
 	margin: 0.2em;
 }
 
-#app {
+header, section {
 	display: flex;
+}
+
+.crumbs {
+	align-items: center;
+	display: flex;
+	flex-grow: 1;
+	justify-content: center;
 }
 
 .sidebar {

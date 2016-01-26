@@ -1,7 +1,10 @@
 import { Observable } from 'rx'
 import { run } from '@cycle/core'
-import { aside, div, ul, li, pre,
-	code, span, makeDOMDriver } from '@cycle/dom'
+import {
+	aside, code, div, header, h1, h2,
+	li, pre, section, span, ul,
+	makeDOMDriver
+} from '@cycle/dom'
 
 import createSocketIODriver from './drivers/cycle-socket.io'
 
@@ -58,8 +61,11 @@ function main({ DOM, socketIO }) {
 	const vtree$ = state$.map(
 		({ payload, selected, content }) => {
 			return div('#app', [
-				Sidebar({ payload, selected }).DOM,
-				Editor({ content }).DOM
+				Header({ selected }).DOM,
+				section([
+					Sidebar({ payload, selected }).DOM,
+					Editor({ content }).DOM
+				])
 			])
 		}
 	)
@@ -70,6 +76,22 @@ function main({ DOM, socketIO }) {
 }
 
 // components
+
+function Header ({ selected }) {
+	let crumbs = ''
+	if (selected) {
+		crumbs = selected.split('|')
+		crumbs.shift()
+		crumbs.shift()
+		crumbs = crumbs.join(' > ')
+	}
+	return {
+		DOM: header([
+			h1('copycast'),
+			h2('.crumbs', crumbs)
+		])
+	}
+}
 
 function Sidebar ({ payload, selected }) {
 	return {
