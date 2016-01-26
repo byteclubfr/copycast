@@ -22,5 +22,16 @@
         "node": true,
         "browser": true
     },
+    "ecmaFeatures": {
+        "arrowFunctions": true,
+        "blockBindings": true,
+        "classes": true,
+        "destructuring": true,
+        "experimentalObjectRestSpread": true,
+        "jsx": true,
+        "modules": true,
+        "objectLiteralShorthandMethods": true,
+        "spread": true
+    },
     "extends": "eslint:recommended"
 }
