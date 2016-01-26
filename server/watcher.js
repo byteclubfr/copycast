@@ -13,7 +13,11 @@ var deleteChild = tw.deleteChild
 exports.createWatcher = (path, tree, done) =>
 	chokidar.watch(path, {
 		ignored: /node_modules|\.git/,
-		persistent: true
+		persistent: true,
+		awaitWriteFinish: {
+			stabilityThreshold: 500,
+			pollInterval: 100
+		}
 	})
 	.on('addDir', (path) => {
 		console.log(`+ d ${path}`)
