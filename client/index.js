@@ -5,6 +5,7 @@ import {
 	li, pre, section, span, ul,
 	makeDOMDriver
 } from '@cycle/dom'
+import hljs from 'highlight.js'
 
 import createSocketIODriver from './drivers/cycle-socket.io'
 
@@ -71,7 +72,8 @@ function main({ DOM, socketIO }) {
 	)
 
 	return {
-		DOM: vtree$
+		DOM: vtree$,
+		hljs: selected$
 	}
 }
 
@@ -134,8 +136,7 @@ function File ({ path, file, selected }) {
 // beware, if content is markdown, it can start with a #
 // which will be interpreted as a CSS id selector
 function Editor ({ content }) {
-	const vtree$ = div('.editor', pre(
-										code('.editor-code', content)))
+	const vtree$ = div('.editor', pre( code('.editor-code', content)))
 	return {
 		DOM: vtree$
 	}
@@ -143,5 +144,9 @@ function Editor ({ content }) {
 
 run(main, {
 	DOM: makeDOMDriver('#root'),
-	socketIO: createSocketIODriver(socket)
+	socketIO: createSocketIODriver(socket),
+	hljs: (selected$) => selected$.subscribe((v) => {
+		if (!v) return
+		hljs.highlightBlock(document.querySelector('.editor-code'))
+	})
 })

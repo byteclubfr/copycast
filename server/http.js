@@ -8,6 +8,7 @@ const clientPath = path.resolve(`${__dirname}/../client`)
 const clientFiles = {
 	'/index.html': 'text/html',
 	'/index.css': 'text/css',
+	'/solarized-light.css': 'text/css',
 	'/bundle.js': 'application/javascript'
 }
 
