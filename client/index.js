@@ -32,8 +32,6 @@ const getContent = (payload, selected) => {
 	if (!selected) return null
 
 	let path = selected.split(PATH_SEP)
-	// remove 'root'
-	path.shift()
 	path.shift()
 	let filename = path.pop()
 
@@ -78,13 +76,7 @@ function main({ DOM, socketIO }) {
 // components
 
 function Header ({ selected }) {
-	let crumbs = ''
-	if (selected) {
-		crumbs = selected.split('|')
-		crumbs.shift()
-		crumbs.shift()
-		crumbs = crumbs.join(' > ')
-	}
+	const crumbs = selected ? selected.split('|').join(' > ') : ''
 	return {
 		DOM: header([
 			h1('copycast'),
@@ -95,14 +87,14 @@ function Header ({ selected }) {
 
 function Sidebar ({ payload, selected }) {
 	return {
-		DOM: aside('.sidebar', Dir({ path: 'root', tree: payload, selected }).DOM)
+		DOM: aside('.sidebar', Dir({ root: true, path: payload.name, tree: payload, selected }).DOM)
 	}
 }
 
-function Dir ({ path, tree, selected }) {
+function Dir ({ root, path, tree, selected }) {
 	if (!tree || !tree.children) return
 
-	path = `${path}${PATH_SEP}${tree.name}`
+	path = root ? tree.name : `${path}${PATH_SEP}${tree.name}`
 	const trees = tree.children.map((child) => {
 		return (child.children)
 			? Dir({ path, tree: child, selected }).DOM

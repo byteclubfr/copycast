@@ -7,8 +7,9 @@ exports.start = (options) => {
 	const DIR = path.resolve(options.dir || '.')
 	const PORT = Number(options.port) || 42000
 
+
 	// state
-	var tree = { name: 'root', children: [] }
+	var tree = { name: path.basename(DIR), children: [] }
 
 	var server = http.createServer()
 	var io = socketIO(server)

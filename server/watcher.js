@@ -10,8 +10,8 @@ var getChildren = tw.getChildren
 var addChild = tw.addChild
 var deleteChild = tw.deleteChild
 
-exports.createWatcher = (path, tree, done) =>
-	chokidar.watch(path, {
+exports.createWatcher = (root, tree, done) =>
+	chokidar.watch(root, {
 		ignored: /node_modules|\.git/,
 		persistent: true,
 		awaitWriteFinish: {
@@ -20,8 +20,8 @@ exports.createWatcher = (path, tree, done) =>
 		}
 	})
 	.on('addDir', (path) => {
+		if (path === root) return
 		console.log(`+ d ${path}`)
-		if (path === '.') return
 
 		addChild(
 			getChildren(tree, path),

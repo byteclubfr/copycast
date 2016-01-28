@@ -22,6 +22,7 @@ const sendFile = (res, name, mime) => {
 	})
 }
 
+// used to communicate easily the local network IP address to students
 const displayAddresses = (port) => {
 	const interfaces = os.networkInterfaces()
 	Object.keys(interfaces).forEach((dev) => {
