@@ -15,7 +15,15 @@ const getChildren = (tree, path) => {
 
 const addChild = (children, child) => {
 	children.push(child)
-	children.sort((a, b) => a.name > b.name)
+	// sort dirs by alpha, then files by alpha
+	children.sort((a, b) => {
+		// dir vs file
+		if (a.children && !b.children) return -1
+		// file vs dir
+		if (!a.children && b.children) return 1
+		// alpha
+		return a.name > b.name
+	})
 }
 
 const deleteChild = (tree, path) => {

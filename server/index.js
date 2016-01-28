@@ -8,11 +8,7 @@ exports.start = (options) => {
 	const PORT = Number(options.port) || 42000
 
 	// state
-	var tree = {
-		name: 'root',
-		toggled: true,
-		children: []
-	}
+	var tree = { name: 'root', children: [] }
 
 	var server = http.createServer()
 	var io = socketIO(server)
@@ -26,8 +22,6 @@ exports.start = (options) => {
 		var ip = socket.request.connection.remoteAddress
 		console.log('socket connection', ip)
 		broadcastTree(tree)
-		socket.on('disconnect', () => {
-			console.log('socket disconnection', ip)
-		})
+		socket.on('disconnect', () => console.log('socket disconnection', ip))
 	})
 }
