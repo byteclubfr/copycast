@@ -5,9 +5,13 @@ import {
 	li, pre, section, span, ul,
 	makeDOMDriver
 } from '@cycle/dom'
-import hljs from 'highlight.js'
+import { VNode, VText } from 'virtual-dom'
+import HTMLToVdom from 'html-to-vdom'
+import { highlightAuto } from 'highlight.js'
 
 import createSocketIODriver from './drivers/cycle-socket.io'
+
+const langs = ['javascript', 'css', 'html', 'markdown']
 
 var socket = io.connect() // eslint-disable-line
 
@@ -15,6 +19,11 @@ socket.on('connect', () => console.log('connected'))
 socket.on('disconnect', (err) => console.error('disconnected', err))
 socket.on('error', (err) => console.error('error', err))
 socket.on('tree', (tree) => console.debug(tree))
+
+// hl + vdom magic
+
+const convertHTML = HTMLToVdom({ VNode: VNode, VText })
+const convertHl = (str) => convertHTML(highlightAuto(str, langs).value || '<noscript />')
 
 // tree walking
 
@@ -72,8 +81,7 @@ function main({ DOM, socketIO }) {
 	)
 
 	return {
-		DOM: vtree$,
-		hljs: selected$
+		DOM: vtree$
 	}
 }
 
@@ -136,7 +144,7 @@ function File ({ path, file, selected }) {
 // beware, if content is markdown, it can start with a #
 // which will be interpreted as a CSS id selector
 function Editor ({ content }) {
-	const vtree$ = div('.editor', pre( code('.editor-code', content)))
+	const vtree$ = div('.editor', pre(code('.editor-code', convertHl(content || ''))))
 	return {
 		DOM: vtree$
 	}
@@ -144,10 +152,5 @@ function Editor ({ content }) {
 
 run(main, {
 	DOM: makeDOMDriver('#root'),
-	socketIO: createSocketIODriver(socket),
-	hljs: (selected$) => selected$.subscribe((v) => {
-		if (!v) return
-		// TODO better cohabitation with vdom
-		// hljs.highlightBlock(document.querySelector('.editor-code'))
-	})
+	socketIO: createSocketIODriver(socket)
 })
