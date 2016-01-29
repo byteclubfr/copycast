@@ -18,15 +18,15 @@ repeated help of the teacher.
 
 ### What's inside?
 
-copycast = file system watcher + websocket server + live webclient
+copycast = [file system watcher](https://github.com/paulmillr/chokidar) + [websocket server](https://github.com/socketio/socket.io) + [reactive webclient](https://github.com/cyclejs)
 
-### Here's how it works :
+### Here's how it works )
 
 - At the beginning of the session, the teacher starts *copycast* on its
 	machine, watching a specific directory.
 - Attendees connect through their browser to the provided local network
 	address.
-- The screen displays on the left the directory tree and the selected file on
+- Their screen displays the directory tree on the left and the selected file on
 	the right, like a readonly text-editor.
 - Each time the teacher edit and save a file, the change is broadcasted to
 	every student who can freely copy-paste snippets to stay up to date.
