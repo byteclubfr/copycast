@@ -45,20 +45,22 @@ header, section {
 	padding: .5vw;
 }
 
-.download {
+.download, .clipboard {
 	align-self: center;
 	background: #EEE;
 	border-color: #C2C0C2 #C2C0C2 #A19FA1;
-	border-radius: 5px;
+	border-radius: 4px;
 	border: 1px solid;
 	box-shadow: 0 1px 1px rgba(0,0,0,.06);
 	cursor: pointer;
 	display: inline-block;
 	padding: .5em;
+	margin-left: .5em;
+	text-decoration: none;
 	transition: all .2s;
 }
 
-.download:hover {
+.download:hover, .clipboard:hover {
 	background: #24272D;
 	color: #FFF;
 }

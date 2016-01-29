@@ -5,10 +5,11 @@ import {
 	li, pre, section, span, ul,
 	makeDOMDriver
 } from '@cycle/dom'
-import hl from './hl'
 import createSocketIODriver from './drivers/cycle-socket.io'
+import hl from './hl'
+import Clipboard from 'clipboard'
 
-var socket = io.connect() // eslint-disable-line
+const socket = io.connect() // eslint-disable-line
 
 socket.on('connect', () => console.log('connected'))
 socket.on('disconnect', (err) => console.error('disconnected', err))
@@ -18,6 +19,8 @@ socket.on('tree', (tree) => console.debug(tree))
 // protection for files with UTF-8 chars like ❭ in this one
 const toDataUri = (content) =>
 	`data:text/plain;base64,${btoa(unescape(encodeURIComponent(content)))}`
+
+new Clipboard('.clipboard')
 
 // tree walking
 
@@ -91,6 +94,11 @@ function Header ({ selected, content }) {
 					download: parts[parts.length - 1],
 					href: toDataUri(content)
 				}, 'Download file')
+				: null,
+			selected
+				? a('.clipboard', {
+					attributes: { 'data-clipboard-target': '.editor-code' }
+				}, 'Copy file')
 				: null
 		])
 	}
