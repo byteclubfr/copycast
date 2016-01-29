@@ -10,7 +10,7 @@ The sessions rhythm is usually quite high and attendees often have a hard time
 to follow oral instructions and advices, watch demos on the main screen and
 keep coding their projects simultaneously.
 
-After only a few hours, the frustration is quite painful : people tend to give
+After only a few hours, the frustration is quite painful: people tend to give
 up because their project gets broken and they can't follow anymore despite the
 repeated help of the teacher.
 
@@ -20,7 +20,7 @@ repeated help of the teacher.
 
 copycast = [file system watcher](https://github.com/paulmillr/chokidar) + [websocket server](https://github.com/socketio/socket.io) + [reactive webclient](https://github.com/cyclejs)
 
-### Here's how it works )
+### Here's how it works:
 
 - At the beginning of the session, the teacher starts *copycast* on its
 	machine, watching a specific directory.
@@ -30,6 +30,11 @@ copycast = [file system watcher](https://github.com/paulmillr/chokidar) + [webso
 	the right, like a readonly text-editor.
 - Each time the teacher edit and save a file, the change is broadcasted to
 	every student who can freely copy-paste snippets to stay up to date.
+
+#### Bonus
+
+- The code is [highlighted](https://github.com/isagalaev/highlight.js)
+- Timers indicate recent file modifications
 
 ## Install
 
@@ -47,7 +52,7 @@ Open `localhost:YOUR_PORT` in a web browser
 
 ## Dev
 
-To build the client :
+To build the client:
 ```sh
 npm i
 npm run watch
