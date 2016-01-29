@@ -52,9 +52,10 @@ Open `localhost:YOUR_PORT` in a web browser
 
 ## Dev
 
-To build the client:
+To start the server and build the client:
 ```sh
 npm i
+npm run start
 npm run watch
 ```
 

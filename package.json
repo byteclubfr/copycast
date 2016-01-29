@@ -8,6 +8,7 @@
   "scripts": {
     "prepublish": "npm run build",
     "build": "browserify client/index.js --debug -o client/bundle.js -t [ babelify --presets [ es2015 ] ]",
+    "start": "node ./bin/copycast.js",
     "watch": "watchify client/index.js --debug -o client/bundle.js -t [ babelify --presets [ es2015 ] ]"
   },
   "files": [
