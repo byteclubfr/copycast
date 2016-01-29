@@ -1,7 +1,7 @@
 import { Observable } from 'rx'
 import { run } from '@cycle/core'
 import {
-	aside, code, div, header, h1, h2,
+	a, aside, code, div, header, h1, h2,
 	li, pre, section, span, ul,
 	makeDOMDriver
 } from '@cycle/dom'
@@ -76,10 +76,10 @@ function main({ DOM, socketIO }) {
 // components
 
 function Header ({ selected }) {
-	const crumbs = selected ? selected.split('|').join(' > ') : ''
+	const crumbs = selected ? selected.split('|').join(' ❭ ') : ''
 	return {
 		DOM: header([
-			h1('copycast'),
+			h1('.logo', a({ href: 'https://github.com/lmtm/copycast' }, 'copycast')),
 			h2('.crumbs', crumbs)
 		])
 	}
