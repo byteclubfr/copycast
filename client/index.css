@@ -48,9 +48,9 @@ header, section {
 .download, .clipboard {
 	align-self: center;
 	background: #EEE;
+	border: 1px solid;
 	border-color: #C2C0C2 #C2C0C2 #A19FA1;
 	border-radius: 4px;
-	border: 1px solid;
 	box-shadow: 0 1px 1px rgba(0,0,0,.06);
 	cursor: pointer;
 	display: inline-block;
@@ -63,6 +63,10 @@ header, section {
 .download:hover, .clipboard:hover {
 	background: #24272D;
 	color: #FFF;
+}
+
+.octicon {
+	margin-right: .4em;
 }
 
 /* sidebar */
@@ -116,4 +120,11 @@ header, section {
 
 .editor pre {
 	margin: 0;
+}
+
+.editor-no-content {
+	color: #ccc;
+	font-size: 5em;
+	margin-top: 50vh;
+	text-align: center;
 }

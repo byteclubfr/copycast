@@ -93,15 +93,19 @@ function Header ({ selected, content }) {
 				? a('.download', {
 					download: parts[parts.length - 1],
 					href: toDataUri(content)
-				}, 'Download file')
+				}, [Octicon('cloud-download'), 'Download file'])
 				: null,
 			selected
 				? a('.clipboard', {
 					attributes: { 'data-clipboard-target': '.editor-code' }
-				}, 'Copy file')
+				}, [Octicon('clippy'), 'Copy file'])
 				: null
 		])
 	}
+}
+
+function Octicon (name) {
+	return span(`.octicon.octicon-${name}`)
 }
 
 function Sidebar ({ payload, selected }) {
@@ -143,7 +147,9 @@ function File ({ path, file, selected }) {
 }
 
 function Editor ({ content }) {
-	const vtree$ = div('.editor', pre(code('.editor-code', hl(content))))
+	const vtree$ = div('.editor', content
+		? pre(code('.editor-code', hl(content)))
+		: div('.editor-no-content', '⇐ Select a file on the left'))
 	return {
 		DOM: vtree$
 	}
