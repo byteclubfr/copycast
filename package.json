@@ -32,10 +32,12 @@
     "@cycle/dom": "^9.0.1",
     "@cycle/isolate": "^1.2.0",
     "chokidar": "^1.4.2",
+    "finalhandler": "^0.4.1",
     "highlight.js": "^9.1.0",
     "html-to-vdom": "^0.7.0",
     "minimist": "^1.2.0",
     "rx": "^4.0.7",
+    "serve-static": "^1.10.2",
     "socket.io": "^1.4.4",
     "virtual-dom": "^2.1.1"
   },

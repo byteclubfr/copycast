@@ -1,26 +1,11 @@
-var path = require('path')
-var fs = require('fs')
-var os = require('os')
-var http = require('http')
+const path = require('path')
+const fs = require('fs')
+const os = require('os')
+const http = require('http')
+const finalhandler = require('finalhandler')
+const serveStatic = require('serve-static')
 
-const clientPath = path.resolve(`${__dirname}/../client`)
-
-const clientFiles = {
-	'/index.html': 'text/html',
-	'/index.css': 'text/css',
-	'/solarized-light.css': 'text/css',
-	'/bundle.js': 'application/javascript'
-}
-
-// utils
-
-const sendFile = (res, name, mime) => {
-	res.writeHead(200, {'Content-Type': mime})
-	fs.readFile(`${clientPath}${name}`, 'utf8', (err, content) => {
-		if (err) throw err
-		res.end(content)
-	})
-}
+const serve = serveStatic(`${__dirname}/../client`)
 
 // used to communicate easily the local network IP address to students
 const displayAddresses = (port) => {
@@ -33,13 +18,7 @@ const displayAddresses = (port) => {
 	})
 }
 
-exports.createServer = () => {
-	const server = http.createServer()
-	server.on('request', (req, res) => {
-		var url = req.url === '/' ? '/index.html' : req.url
-		if (clientFiles[url]) sendFile(res, url, clientFiles[url])
-		// else res.end()
-	})
-	return server
-}
+exports.createServer = () =>
+	http.createServer((req, res) => serve(req, res, finalhandler(req, res)))
+
 exports.displayAddresses = displayAddresses
