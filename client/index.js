@@ -15,6 +15,10 @@ socket.on('disconnect', (err) => console.error('disconnected', err))
 socket.on('error', (err) => console.error('error', err))
 socket.on('tree', (tree) => console.debug(tree))
 
+// protection for files with UTF-8 chars like ❭ in this one
+const toDataUri = (content) =>
+	`data:text/plain;base64,${btoa(unescape(encodeURIComponent(content)))}`
+
 // tree walking
 
 const PATH_SEP = '|'
@@ -59,7 +63,7 @@ function main({ DOM, socketIO }) {
 	const vtree$ = state$.map(
 		({ payload, selected, content }) => {
 			return div('#app', [
-				Header({ selected }).DOM,
+				Header({ selected, content }).DOM,
 				section([
 					Sidebar({ payload, selected }).DOM,
 					Editor({ content }).DOM
@@ -75,12 +79,19 @@ function main({ DOM, socketIO }) {
 
 // components
 
-function Header ({ selected }) {
-	const crumbs = selected ? selected.split('|').join(' ❭ ') : ''
+function Header ({ selected, content }) {
+	const parts = selected ? selected.split('|') : []
+
 	return {
 		DOM: header([
 			h1('.logo', a({ href: 'https://github.com/lmtm/copycast' }, 'copycast')),
-			h2('.crumbs', crumbs)
+			h2('.crumbs', parts.join(' ❭ ')),
+			selected
+				? a('.download', {
+					download: parts[parts.length - 1],
+					href: toDataUri(content)
+				}, 'Download file')
+				: null
 		])
 	}
 }

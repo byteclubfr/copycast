@@ -26,13 +26,6 @@ header, section {
 
 /* header */
 
-.crumbs {
-	align-items: center;
-	display: flex;
-	flex-grow: 1;
-	padding: .5vw;
-}
-
 .logo {
 	background: #24272D;
 	color: #EEE;
@@ -44,6 +37,30 @@ header, section {
 .logo a {
 	color: #FFF;
 	text-decoration: none;
+}
+
+.crumbs {
+	align-items: center;
+	display: flex;
+	padding: .5vw;
+}
+
+.download {
+	align-self: center;
+	background: #EEE;
+	border-color: #C2C0C2 #C2C0C2 #A19FA1;
+	border-radius: 5px;
+	border: 1px solid;
+	box-shadow: 0 1px 1px rgba(0,0,0,.06);
+	cursor: pointer;
+	display: inline-block;
+	padding: .5em;
+	transition: all .2s;
+}
+
+.download:hover {
+	background: #24272D;
+	color: #FFF;
 }
 
 /* sidebar */
