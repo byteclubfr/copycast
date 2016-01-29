@@ -17,6 +17,14 @@
     "client/index.html",
     "server"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lmtm/copycast.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lmtm/copycast/issues"
+  },
+  "homepage": "https://github.com/lmtm/copycast#readme",
   "author": "Delapouite <delapouite@gmail.com> (http://delapouite.com)",
   "license": "ISC",
   "dependencies": {
