@@ -26,8 +26,8 @@ new Clipboard('.clipboard')
 
 const PATH_SEP = '|'
 
-const getChildren = (payload, path) => {
-	let children = payload.children
+const getChildren = (tree, path) => {
+	let children = tree.children
 	path.forEach((dir) => {
 		const child = children.find(c => c.name === dir)
 		if (child) children = child.children
@@ -35,14 +35,14 @@ const getChildren = (payload, path) => {
 	return children
 }
 
-const getContent = (payload, selected) => {
+const getContent = (tree, selected) => {
 	if (!selected) return null
 
 	let path = selected.split(PATH_SEP)
 	path.shift()
 	let filename = path.pop()
 
-	const file = getChildren(payload, path).find(c => c.name === filename)
+	const file = getChildren(tree, path).find(c => c.name === filename)
 	return file ? file.content : null
 }
 
@@ -56,20 +56,29 @@ function main({ DOM, socketIO }) {
 		.map(ev => ev.target.data.id)
 		.startWith(null)
 
+	const collapsed$ = DOM.select('.sidebar .dirname').events('click')
+		.map(ev => ev.target.data.id)
+		.startWith(null)
+		.scan((set, v) => {
+			if (!v) return set
+			set.has(v) ? set.delete(v) : set.add(v)
+			return set
+		}, new Set)
+
 	const state$ = Observable.combineLatest(
-		res$, selected$, elapsed$,
-		(payload, selected) => {
-			const content = getContent(payload, selected)
-			return { payload, selected, content }
+		res$, selected$, collapsed$, elapsed$,
+		(tree, selected, collapsed) => {
+			const content = getContent(tree, selected)
+			return { tree, selected, collapsed, content }
 		})
 
 	const vtree$ = state$.map(
-		({ payload, selected, content }) => {
+		({ tree, selected, collapsed, content }) => {
 			return div('#app', [
-				Header({ selected, content }).DOM,
+				Header({ selected, content }),
 				section([
-					Sidebar({ payload, selected }).DOM,
-					Editor({ content }).DOM
+					Sidebar({ tree, selected, collapsed }),
+					Editor({ content })
 				])
 			])
 		}
@@ -85,47 +94,47 @@ function main({ DOM, socketIO }) {
 function Header ({ selected, content }) {
 	const parts = selected ? selected.split('|') : []
 
-	return {
-		DOM: header([
-			h1('.logo', a({ href: 'https://github.com/lmtm/copycast' }, 'copycast')),
-			h2('.crumbs', parts.join(' ❭ ')),
-			selected
-				? a('.download', {
-					download: parts[parts.length - 1],
-					href: toDataUri(content)
-				}, [Octicon('cloud-download'), 'Download file'])
-				: null,
-			selected
-				? a('.clipboard', {
-					attributes: { 'data-clipboard-target': '.editor-code' }
-				}, [Octicon('clippy'), 'Copy file'])
-				: null
-		])
-	}
+	return header([
+		h1('.logo', a({ href: 'https://github.com/lmtm/copycast' }, 'copycast')),
+		h2('.crumbs', parts.join(' ❭ ')),
+		selected
+			? a('.download', {
+				download: parts[parts.length - 1],
+				href: toDataUri(content)
+			}, [Octicon('cloud-download'), 'Download file'])
+			: null,
+		selected
+			? a('.clipboard', {
+				attributes: { 'data-clipboard-target': '.editor-code' }
+			}, [Octicon('clippy'), 'Copy file'])
+			: null
+	])
 }
 
 function Octicon (name) {
 	return span(`.octicon.octicon-${name}`)
 }
 
-function Sidebar ({ payload, selected }) {
-	return {
-		DOM: aside('.sidebar', Dir({ root: true, path: payload.name, tree: payload, selected }).DOM)
-	}
+function Sidebar ({ tree, selected, collapsed }) {
+	return aside('.sidebar', Dir({ root: true, path: tree.name, tree, selected, collapsed }))
 }
 
-function Dir ({ root, path, tree, selected }) {
+function Dir ({ root, path, tree, selected, collapsed }) {
 	if (!tree || !tree.children) return
 
 	path = root ? tree.name : `${path}${PATH_SEP}${tree.name}`
-	const trees = tree.children.map((child) => {
-		return (child.children)
-			? Dir({ path, tree: child, selected }).DOM
-			: File({ path, file: child, selected }).DOM
-	})
-	return {
-		DOM: ul('.dir', [li('.dirname', tree.name), ...trees])
+	let klass = '.dirname'
+	let trees = []
+	if (collapsed.has(path)) {
+		klass += '.collapsed'
+	} else {
+		trees = tree.children.map((child) => {
+			return (child.children)
+				? Dir({ path, tree: child, selected, collapsed })
+				: File({ path, file: child, selected })
+		})
 	}
+	return ul('.dir', [li(klass, { data: { id: path } }, tree.name), ...trees])
 }
 
 function File ({ path, file, selected }) {
@@ -138,21 +147,16 @@ function File ({ path, file, selected }) {
 			elapsed = `${ago}s`
 		}
 	}
-	return {
-		DOM: li(`.file${ selected === id ? '.selected' : '' }`, [
-			span('.filename', { data: { id } }, name),
-			span('.elapsed', { data: { id } }, elapsed)
-		])
-	}
+	return li(`.file${ selected === id ? '.selected' : '' }`, [
+		span('.filename', { data: { id } }, name),
+		span('.elapsed', { data: { id } }, elapsed)
+	])
 }
 
 function Editor ({ content }) {
-	const vtree$ = div('.editor', content
+	return div('.editor', content
 		? pre(code('.editor-code', hl(content)))
 		: div('.editor-no-content', '⇐ Select a file on the left'))
-	return {
-		DOM: vtree$
-	}
 }
 
 run(main, {

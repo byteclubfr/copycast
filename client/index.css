@@ -89,7 +89,16 @@ header, section {
 }
 
 .dirname {
+	cursor: pointer;
 	font-weight: bold;
+}
+
+.dirname::before {
+	content: '▾ ';
+}
+
+.dirname.collapsed::before {
+	content: '▸ ';
 }
 
 .file {
