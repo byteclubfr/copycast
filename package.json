@@ -6,14 +6,16 @@
     "copycast": "bin/copycast.js"
   },
   "scripts": {
+    "assets": "npm run octicons && npm run hl && npm run hl-list",
+    "postinstall": "npm run octicons && npm run hl",
     "prepublish": "npm run build",
-    "prebuild": "npm run octicons && npm run hl",
+    "prebuild": "npm run assets",
     "build": "browserify client/index.js --debug -o client/bundle.js -t [ babelify --presets [ es2015 ] ]",
-    "hl": "cp -r node_modules/highlight.js/styles client/hl-themes && npm run hl-list",
+    "hl": "cp -r node_modules/highlight.js/styles/*.css client/hl-themes/",
     "hl-list": "cd client/hl-themes/ && ls *.css | jq -R -s 'split(\"\n\")' > list.json && cd -",
     "octicons": "cp -r node_modules/octicons/octicons client",
     "start": "node ./bin/copycast.js",
-    "prewatch": "npm run octicons && npm run hl",
+    "prewatch": "npm run assets",
     "watch": "watchify client/index.js --debug -o client/bundle.js -t [ babelify --presets [ es2015 ] ]"
   },
   "files": [
@@ -21,6 +23,7 @@
     "client/bundle.js",
     "client/index.css",
     "client/index.html",
+    "client/hl-themes/list.json",
     "server"
   ],
   "repository": {
