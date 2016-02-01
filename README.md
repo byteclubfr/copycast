@@ -7,6 +7,8 @@
 
 ## Use case
 
+![copycast](https://raw.githubusercontent.com/lmtm/copycast/master/illustration.png)
+
 Long code workshops (like a few days) can rapidly turn into hell for trainees.
 
 The sessions rhythm is usually quite high and attendees often have a hard time
@@ -65,5 +67,7 @@ npm run watch
 ```
 
 ## License
+
+Made by the [ByteClub](http://byteclub.fr)
 
 ISC

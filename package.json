@@ -23,7 +23,6 @@
     "client/bundle.js",
     "client/index.css",
     "client/index.html",
-    "client/hl-themes/list.json",
     "server"
   ],
   "repository": {
