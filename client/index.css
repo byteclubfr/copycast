@@ -28,7 +28,6 @@ header, section {
 
 .logo {
 	background: #24272D;
-	color: #EEE;
 	padding: .5vw;
 	text-align: center;
 	width: 10%;
@@ -136,4 +135,30 @@ header, section {
 	font-size: 5em;
 	margin-top: 50vh;
 	text-align: center;
+}
+
+/* footer */
+
+.footer {
+	display: flex;
+}
+
+.status {
+	background: #24272D;
+	color: #FFF;
+	padding: .5vw;
+	text-align: center;
+	width: 10%;
+}
+
+.status a {
+	color: #FFF;
+}
+
+.conn-on {
+	color: #0C0;
+}
+
+.conn-off {
+	color: #C00;
 }
