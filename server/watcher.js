@@ -3,7 +3,7 @@ var fs = require('fs')
 var chokidar = require('chokidar')
 
 // TODO use destructuring when available
-var tw = require('./tree-walking')
+var tw = require('./tree-walker')
 var createDir = tw.createDir
 var createFile = tw.createFile
 var getChildren = tw.getChildren
