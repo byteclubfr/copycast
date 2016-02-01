@@ -2,14 +2,14 @@ import { Observable } from 'rx'
 import { run } from '@cycle/core'
 import {
 	a, aside, code, div, footer, header, h1, h2,
-	li, pre, section, span, ul,
+	li, link, option, pre, section, select, span, ul,
 	makeDOMDriver
 } from '@cycle/dom'
 
 import getClickIds$ from './utils/dom'
-import { PATH_SEP, getChildren, getContent } from './utils/tree-walker'
+import { PATH_SEP, getContent } from './utils/tree-walker'
 import createSocketIODriver from './drivers/cycle-socket.io'
-import hl from './hl'
+import { hl, hlThemes } from './hl'
 import Clipboard from 'clipboard'
 
 // protection for files with UTF-8 chars like ❭ in this one
@@ -35,23 +35,27 @@ function main({ DOM, socketIO }) {
 			set.has(v) ? set.delete(v) : set.add(v)
 			return set
 		}, new Set)
+	const hlTheme$ = DOM.select('.hl-themes').events('change')
+		.map(ev => ev.target.value)
+		.startWith(hlThemes[34]) // github
 
 	const state$ = Observable.combineLatest(
-		tree$, selected$, collapsed$, conn$, elapsed$,
-		(tree, selected, collapsed, conn) => {
+		tree$, selected$, collapsed$, conn$, hlTheme$, elapsed$,
+		(tree, selected, collapsed, conn, hlTheme) => {
 			const content = getContent(tree, selected)
-			return { tree, selected, collapsed, conn, content }
+			return { tree, selected, collapsed, conn, hlTheme, content }
 		})
 
 	const vtree$ = state$.map(
-		({ tree, selected, collapsed, conn, content }) => {
+		({ tree, selected, collapsed, conn, hlTheme, content }) => {
 			return div('#app', [
 				Header({ selected, content }),
 				section([
 					Sidebar({ tree, selected, collapsed }),
 					Editor({ content })
 				]),
-				Footer({ conn })
+				Footer({ conn, hlTheme }),
+				link({ rel: 'stylesheet', href: `hl-themes/${hlTheme}.css` })
 			])
 		}
 	)
@@ -127,15 +131,19 @@ function File ({ path, file, selected }) {
 
 function Editor ({ content }) {
 	return div('.editor', content
-		? pre(code('.editor-code', hl(content)))
+		? pre(code('.editor-code.hljs', hl(content)))
 		: div('.editor-no-content', '⇐ Select a file on the left'))
 }
 
-function Footer ({ conn }) {
-	return footer(div(`.status`, [
-		span(`.conn-${ conn ? 'on' : 'off' }`, { title: 'Socket connection status' }, Octicon('plug')),
-		a({ href: 'https://github.com/lmtm/copycast' }, Octicon('mark-github'))
-	]))
+function Footer ({ conn, hlTheme }) {
+	return footer(div('.footer', [
+			div('.status', [
+				span(`.conn-${ conn ? 'on' : 'off' }`, { title: 'Socket connection status' }, Octicon('plug')),
+				a({ href: 'https://github.com/lmtm/copycast' }, Octicon('mark-github'))
+			]),
+			div(select('.hl-themes', hlThemes.map(t => option({ selected: t === hlTheme }, t))))
+		]
+	))
 }
 
 run(main, {

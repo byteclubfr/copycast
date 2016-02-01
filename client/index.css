@@ -139,16 +139,20 @@ header, section {
 
 /* footer */
 
-.footer {
+footer {
 	display: flex;
 }
 
-.status {
+.footer {
 	background: #24272D;
 	color: #FFF;
 	padding: .5vw;
 	text-align: center;
 	width: 10%;
+}
+
+.status {
+	margin-bottom: .3vw;
 }
 
 .status a {
