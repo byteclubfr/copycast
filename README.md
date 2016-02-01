@@ -1,6 +1,9 @@
+[![npm version](https://badge.fury.io/js/copycast.svg)](http://badge.fury.io/js/copycast)
+[![Dependency Status](https://david-dm.org/lmtm/copycast.svg)](https://david-dm.org/lmtm/copycast)
+
 # copycast
 
-    Live remote copy-pasta explorer for training sessions
+> Live remote copy-pasta explorer for code training sessions
 
 ## Use case
 
@@ -24,7 +27,7 @@ copycast = [file system watcher](https://github.com/paulmillr/chokidar) + [webso
 
 - At the beginning of the session, the teacher starts *copycast* on its
 	machine, watching a specific directory.
-- Attendees connect through their browser to the provided local network
+- Attendees connect through their web browser to the provided local network
 	address.
 - Their screen displays the directory tree on the left and the selected file on
 	the right, like a readonly text-editor.
@@ -33,8 +36,10 @@ copycast = [file system watcher](https://github.com/paulmillr/chokidar) + [webso
 
 #### Bonus
 
-- The code is [highlighted](https://github.com/isagalaev/highlight.js)
+- The code is [highlighted](https://github.com/isagalaev/highlight.js) with the theme of your choice
 - Timers indicate recent file modifications
+- Files can be downloaded
+- Files can be copied to [clipboard](https://github.com/zenorocha/clipboard.js/)
 
 ## Install
 
