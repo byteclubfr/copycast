@@ -1,6 +1,6 @@
 import {
 	a, aside, code, div, footer, header, h1, h2,
-	li, option, pre, select, span, ul
+	li, main, option, pre, select, span, ul
 } from '@cycle/dom'
 import { PATH_SEP } from './utils/tree-walker'
 import { hl, hlThemes } from './hl'
@@ -9,16 +9,31 @@ import { hl, hlThemes } from './hl'
 const toDataUri = (content) =>
 	`data:text/plain;base64,${btoa(unescape(encodeURIComponent(content)))}`
 
+/*
++-----------------+---------------------------+
+| .logo           | .editor-header            |
+|                 |   .crumbs                 |
++-----------------+---------------------------+
+| .tree           | .editor                   |
+|   .dir          |                           |
+|     .file       |                           |
+|                 |                           |
+|                 |                           |
+|                 |                           |
+|                 |                           |
+|                 |                           |
++-----------------+                           |
+| .sidebar-footer |                           |
++-----------------+---------------------------+
+*/
 
 const Octicon = (name) => span(`.octicon.octicon-${name}`)
 
 export const Sidebar = ({ tree, selected, collapsed, conn, hlTheme, sidebarWidth }) =>
 	aside('.sidebar', { style: { width: `${sidebarWidth}px` } }, [
 		h1('.logo', a({ href: 'https://github.com/lmtm/copycast' }, 'copycast')),
-		div('.tree',
-			Dir({ root: true, path: tree.name, tree, selected, collapsed })
-		),
-		Footer({ conn, hlTheme })
+		div('.tree', Dir({ root: true, path: tree.name, tree, selected, collapsed })),
+		SidebarFooter({ conn, hlTheme })
 	])
 
 const Dir = ({ root, path, tree, selected, collapsed }) => {
@@ -55,8 +70,8 @@ const File = ({ path, file, selected }) => {
 	])
 }
 
-const Footer = ({ conn, hlTheme }) =>
-	footer([
+const SidebarFooter = ({ conn, hlTheme }) =>
+	footer('.sidebar-footer', [
 		div('.status', [
 			span(`.conn-${ conn ? 'on' : 'off' }`, { title: 'Socket connection status' }, Octicon('plug')),
 			a({ href: 'https://github.com/lmtm/copycast' }, Octicon('mark-github'))
@@ -67,17 +82,17 @@ const Footer = ({ conn, hlTheme }) =>
 export const Resizer = () => div('.resizer')
 
 export const Editor = ({ selected, content }) =>
-	div('.main', [
-		Header({ selected, content }),
+	main('.main', [
+		EditorHeader({ selected, content }),
 		div('.editor', content
 			? pre(code('.editor-code.hljs', hl(content)))
 			: div('.editor-no-content', '⇐ Select a file on the left'))
 	])
 
-const Header = ({ selected, content }) => {
+const EditorHeader = ({ selected, content }) => {
 	const parts = selected ? selected.split('|') : []
 
-	return header([
+	return header('.editor-header', [
 		h2('.crumbs', parts.join(' ❭ ')),
 		selected
 			? a('.download', {

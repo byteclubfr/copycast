@@ -21,7 +21,7 @@ a {
 	color: #333;
 }
 
-header, #app {
+#app {
 	display: flex;
 }
 
@@ -133,7 +133,7 @@ header, #app {
 
 /* footer */
 
-footer {
+.sidebar-footer {
 	background: #24272D;
 	color: #FFF;
 	padding: .5vw;
@@ -165,6 +165,10 @@ footer {
 }
 
 /* editor */
+
+.editor-header {
+	display: flex;
+}
 
 .main {
 	flex-grow: 1;
