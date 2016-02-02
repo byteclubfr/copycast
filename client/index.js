@@ -1,6 +1,7 @@
 import { Observable } from 'rx'
 import { run } from '@cycle/core'
 import { div, link, makeDOMDriver } from '@cycle/dom'
+import storageDriver from '@cycle/storage'
 
 import { Sidebar, Resizer, Editor } from './components'
 import { hlThemes } from './hl'
@@ -11,7 +12,10 @@ import createSocketIODriver from './drivers/cycle-socket.io'
 import Clipboard from 'clipboard'
 new Clipboard('.clipboard')
 
-function main({ DOM, socket }) {
+// localStorage key
+const LS_HL_THEME = 'copycast.hl-theme'
+
+function main({ DOM, socket, storage }) {
 	// intents
 
 	// to refresh elapsed counter regularly
@@ -34,11 +38,6 @@ function main({ DOM, socket }) {
 			return set
 		}, new Set)
 
-	// sidebar <select>
-	const hlTheme$ = DOM.select('.hl-themes').events('change')
-		.map(ev => ev.target.value)
-		.startWith(hlThemes[34]) // github theme
-
 	// resizer
 	const mouseMove$ = Observable.fromEvent(document, 'mousemove')
 	const mouseDown$ =  DOM.select('.resizer').events('mousedown')
@@ -47,6 +46,9 @@ function main({ DOM, socket }) {
 		mouseMove$.map(({ clientX }) => clientX)
 			.takeUntil(mouseUp$)
 	).startWith(230)
+
+	const hlTheme$ = storage.local.getItem(LS_HL_THEME)
+		.map(v => v === null ? hlThemes[34] : v) // default to GitHub theme
 
 	// model
 
@@ -68,8 +70,13 @@ function main({ DOM, socket }) {
 			])
 	)
 
+	// save sidebar <select> value to localStorage
+	const storageInstructions$ = DOM.select('.hl-themes').events('change')
+		.map(ev => ({ key: LS_HL_THEME, value: ev.target.value }))
+
 	return {
-		DOM: vtree$
+		DOM: vtree$,
+		storage: storageInstructions$
 	}
 }
 
@@ -77,5 +84,6 @@ function main({ DOM, socket }) {
 
 run(main, {
 	DOM: makeDOMDriver('#root'),
-	socket: createSocketIODriver()
+	socket: createSocketIODriver(),
+	storage: storageDriver
 })
