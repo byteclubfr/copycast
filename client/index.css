@@ -127,6 +127,7 @@ header, #app {
 
 .elapsed {
 	color: #999;
+	margin-left: 1em;
 	text-align: right;
 }
 
