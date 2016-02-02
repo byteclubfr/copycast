@@ -11,6 +11,7 @@ body {
 }
 
 h1, h2 {
+	font-size: 1.5em;
 	font-weight: normal;
 	letter-spacing: 0.2em;
 	margin: 0;
@@ -20,27 +21,16 @@ a {
 	color: #333;
 }
 
-header, section {
+header, #app {
 	display: flex;
 }
 
 /* header */
 
-.logo {
-	background: #24272D;
-	padding: .5vw;
-	text-align: center;
-	width: 10%;
-}
-
-.logo a {
-	color: #FFF;
-	text-decoration: none;
-}
-
 .crumbs {
 	align-items: center;
 	display: flex;
+	height: 2em;
 	padding: .5vw;
 }
 
@@ -71,13 +61,34 @@ header, section {
 /* sidebar */
 
 .sidebar {
+	min-width: 230px;
+	white-space: nowrap;
+	width: 230px;
+}
+
+.logo {
+	align-items: center;
+	background: #24272D;
+	display: flex;
+	justify-content: center;
+	height: 2em;
+	padding: .5vw;
+}
+
+	.logo a {
+		color: #FFF;
+		text-decoration: none;
+	}
+
+/* tree */
+
+.tree {
 	background: #EEE;
 	overflow-x: auto;
 	padding: .5vw;
-	width: 10%;
 }
 
-.sidebar > .dir {
+.tree > .dir {
 	padding: 0;
 }
 
@@ -119,36 +130,13 @@ header, section {
 	text-align: right;
 }
 
-/* editor */
-
-.editor {
-	flex-grow: 1;
-	padding: .5vw;
-}
-
-.editor pre {
-	margin: 0;
-}
-
-.editor-no-content {
-	color: #ccc;
-	font-size: 5em;
-	margin-top: 50vh;
-	text-align: center;
-}
-
 /* footer */
 
 footer {
-	display: flex;
-}
-
-.footer {
 	background: #24272D;
 	color: #FFF;
 	padding: .5vw;
 	text-align: center;
-	width: 10%;
 }
 
 .status {
@@ -165,4 +153,31 @@ footer {
 
 .conn-off {
 	color: #C00;
+}
+
+/* resizer */
+
+.resizer {
+	background: white;
+	cursor: col-resize;
+	width: 5px;
+}
+
+/* editor */
+
+.main {
+	flex-grow: 1;
+	overflow: auto;
+}
+
+.editor pre {
+	margin: 0;
+	padding-bottom: 20px;
+}
+
+.editor-no-content {
+	color: #ccc;
+	font-size: 5em;
+	margin-top: 42vh;
+	text-align: center;
 }
