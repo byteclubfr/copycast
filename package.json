@@ -10,7 +10,7 @@
     "postinstall": "npm run octicons && npm run hl",
     "prepublish": "npm run build",
     "prebuild": "npm run assets",
-    "build": "browserify client/index.js --debug -o client/bundle.js -t [ babelify --presets [ es2015 ] ]",
+    "build": "browserify client/index.js -o client/bundle.js -t [ babelify --presets [ es2015 ] ] -t uglifyify",
     "hl": "mkdir -p client/hl-themes && cp -r node_modules/highlight.js/styles/*.css client/hl-themes/",
     "hl-list": "cd client/hl-themes/ && ls *.css | jq -R -s 'split(\"\n\")' > list.json && cd -",
     "octicons": "cp -r node_modules/octicons/octicons client",
@@ -56,6 +56,7 @@
     "babel-preset-es2015": "^6.3.13",
     "babelify": "^7.2.0",
     "browserify": "^13.0.0",
+    "uglifyify": "^3.0.1",
     "watchify": "^3.7.0"
   }
 }
