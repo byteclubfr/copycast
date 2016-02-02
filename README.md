@@ -57,6 +57,9 @@ copycast -d YOUR_DIR -p YOUR_PORT
 
 Open `localhost:YOUR_PORT` in a web browser
 
+- `-d`: default to `.`
+- `-p`: default to `42000`
+
 ## Dev
 
 To start the server and build the client:
