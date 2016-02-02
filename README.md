@@ -69,6 +69,12 @@ npm run start
 npm run watch
 ```
 
+To print `debug` logs:
+
+```sh
+DEBUG=watcher,socket npm run start
+```
+
 ## License
 
 Made by the [ByteClub](http://byteclub.fr)

@@ -1,28 +1,29 @@
-var path = require('path')
-var http = require('./http')
-var socketIO = require('socket.io')
-var createWatcher = require('./watcher').createWatcher
+const path = require('path')
+const socketIO = require('socket.io')
+const debug = require('debug')('socket')
+
+const http = require('./http')
+const createWatcher = require('./watcher').createWatcher
 
 exports.start = (options) => {
 	const DIR = path.resolve(options.dir || '.')
 	const PORT = Number(options.port) || 42000
 
-
 	// state
 	var tree = { name: path.basename(DIR), children: [] }
 
-	var server = http.createServer()
-	var io = socketIO(server)
+	const server = http.createServer()
+	const io = socketIO(server)
 	server.listen(PORT, () => http.displayAddresses(PORT))
 
-	var broadcastTree = (tree) => io.emit('tree', tree)
+	const broadcastTree = (tree) => io.emit('tree', tree)
 
 	createWatcher(DIR, tree, broadcastTree)
 
 	io.on('connection', (socket) => {
-		var ip = socket.request.connection.remoteAddress
-		console.log('socket connection', ip)
+		const ip = socket.request.connection.remoteAddress
+		debug('connection', ip)
 		broadcastTree(tree)
-		socket.on('disconnect', () => console.log('socket disconnection', ip))
+		socket.on('disconnect', () => debug('disconnection', ip))
 	})
 }

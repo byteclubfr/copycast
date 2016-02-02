@@ -35,7 +35,7 @@ const deleteChild = (tree, path) => {
 	return children
 }
 
-const printTree = (tree) => console.log(JSON.stringify(tree, null, 2))
+const printTree = (tree) => console.log(JSON.stringify(tree, null, 2)) // eslint-disable-line
 
 module.exports = {
 	createDir, createFile, getChildren, addChild, deleteChild, printTree

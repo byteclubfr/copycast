@@ -42,6 +42,7 @@
     "@cycle/storage": "^2.0.3",
     "chokidar": "^1.4.2",
     "clipboard": "^1.5.5",
+    "debug": "^2.2.0",
     "finalhandler": "^0.4.1",
     "highlight.js": "^9.1.0",
     "html-to-vdom": "^0.7.0",

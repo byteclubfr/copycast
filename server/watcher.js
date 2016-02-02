@@ -1,14 +1,15 @@
-var P = require('path')
-var fs = require('fs')
-var chokidar = require('chokidar')
+const P = require('path')
+const fs = require('fs')
+const chokidar = require('chokidar')
+const debug = require('debug')('watcher')
 
 // TODO use destructuring when available
-var tw = require('./tree-walker')
-var createDir = tw.createDir
-var createFile = tw.createFile
-var getChildren = tw.getChildren
-var addChild = tw.addChild
-var deleteChild = tw.deleteChild
+const tw = require('./tree-walker')
+const createDir = tw.createDir
+const createFile = tw.createFile
+const getChildren = tw.getChildren
+const addChild = tw.addChild
+const deleteChild = tw.deleteChild
 
 exports.createWatcher = (root, tree, done) =>
 	chokidar.watch(root, {
@@ -21,7 +22,7 @@ exports.createWatcher = (root, tree, done) =>
 	})
 	.on('addDir', (path) => {
 		if (path === root) return
-		console.log(`+ d ${path}`)
+		debug('+d', path)
 
 		addChild(
 			getChildren(tree, path),
@@ -30,7 +31,7 @@ exports.createWatcher = (root, tree, done) =>
 		done(tree)
 	})
 	.on('add', (path) => {
-		console.log(`+ f ${path}`)
+		debug('+f', path)
 
 		fs.readFile(path, 'utf8', (err, content) => {
 			addChild(
@@ -41,19 +42,19 @@ exports.createWatcher = (root, tree, done) =>
 		})
 	})
 	.on('unlinkDir', (path) => {
-		console.log(`- d ${path}`)
+		debug('-d', path)
 
 		deleteChild(tree, path)
 		done(tree)
 	})
 	.on('unlink', (path) => {
-		console.log(`- f ${path}`)
+		debug('-f', path)
 
 		deleteChild(tree, path)
 		done(tree)
 	})
 	.on('change', (path, stats) => {
-		console.log(`= f ${path}`)
+		debug('=f', path)
 
 		fs.readFile(path, 'utf8', (err, content) => {
 			const c = getChildren(tree, P.dirname(path))
@@ -63,6 +64,6 @@ exports.createWatcher = (root, tree, done) =>
 			done(tree)
 		})
 	})
-	.on('error', (error) => console.log(`Watcher error: ${error}`))
-	.on('ready', () => console.log('Initial scan complete. Ready for changes'))
+	.on('error', (error) => debug('Watcher error', error))
+	.on('ready', () => debug('Initial scan complete. Ready for changes'))
 

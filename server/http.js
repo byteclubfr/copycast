@@ -11,7 +11,7 @@ const displayAddresses = (port) => {
 	Object.keys(interfaces).forEach((dev) => {
 		interfaces[dev].forEach((details) => {
 			if (details.family !== 'IPv4') return
-			console.log('http://' + details.address + ':' + port)
+			console.log(`http://${details.address}:${port}`) // eslint-disable-line
 		})
 	})
 }
