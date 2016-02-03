@@ -46,17 +46,15 @@ const intent = ({ DOM, socket, storage }) => {
 	// to refresh elapsed counter regularly
 	const elapsed$ = Observable.timer(0, 5000)
 
-	return { tree$, selected$, collapsed$, conn$, hlTheme$, sidebarWidth$, elapsed$ }
+	return [ tree$, selected$, collapsed$, conn$, hlTheme$, sidebarWidth$, elapsed$ ]
 }
 
-const model = ({ tree$, selected$, collapsed$, conn$, hlTheme$, sidebarWidth$, elapsed$ }) =>
-	Observable.combineLatest(
-		tree$, selected$, collapsed$, conn$, hlTheme$, sidebarWidth$, elapsed$,
-		(tree, selected, collapsed, conn, hlTheme, sidebarWidth) =>
-			({ tree, selected, collapsed, conn, hlTheme, sidebarWidth, content: getContent(tree, selected) }))
+const model = (actions$) =>
+	Observable.combineLatest(actions$)
+		.map(([ tree, sel, ...x ]) => [ tree, sel, getContent(tree, sel), ...x ])
 
 const view = (state$) =>
-	state$.map(({ tree, selected, collapsed, conn, hlTheme, sidebarWidth, content }) =>
+	state$.map(([ tree, selected, content, collapsed, conn, hlTheme, sidebarWidth ]) =>
 		div('#app', [
 			Sidebar({ tree, selected, collapsed, conn, hlTheme, sidebarWidth }),
 			Resizer(),
