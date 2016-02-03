@@ -10,13 +10,13 @@
     "postinstall": "npm run octicons && npm run hl",
     "prepublish": "npm run build",
     "prebuild": "npm run assets",
-    "build": "browserify client/index.js -o client/bundle.js -t [ babelify --presets [ es2015 ] ] -t uglifyify",
+    "build": "browserify client/index.js -o client/bundle.js -t babelify -t uglifyify",
     "hl": "mkdir -p client/hl-themes && cp -r node_modules/highlight.js/styles/*.css client/hl-themes/",
     "hl-list": "cd client/hl-themes/ && ls *.css | jq -R -s 'split(\"\n\")' > list.json && cd -",
     "octicons": "cp -r node_modules/octicons/octicons client",
     "start": "node ./bin/copycast.js",
     "prewatch": "npm run assets",
-    "watch": "watchify client/index.js --debug -o client/bundle.js -t [ babelify --presets [ es2015 ] ]"
+    "watch": "watchify client/index.js --debug -o client/bundle.js -t babelify"
   },
   "files": [
     "bin",
