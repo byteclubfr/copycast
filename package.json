@@ -12,7 +12,7 @@
     "prebuild": "npm run assets",
     "build": "browserify client/index.js -o client/bundle.js -t babelify -t uglifyify",
     "hl": "mkdir -p client/hl-themes && cp -r node_modules/highlight.js/styles/*.css client/hl-themes/",
-    "hl-list": "cd client/hl-themes/ && ls *.css | jq -R -s 'split(\"\n\")' > list.json && cd -",
+    "hl-list": "babel-node bin/hl-list.js",
     "octicons": "cp -r node_modules/octicons/octicons client",
     "start": "node ./bin/copycast.js",
     "prewatch": "npm run assets",
