@@ -1,4 +1,5 @@
 node_modules
+npm-debug.log
 client/bundle.js
 client/hl-themes
 client/octicons
