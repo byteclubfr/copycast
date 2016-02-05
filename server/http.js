@@ -2,6 +2,7 @@ const os = require('os')
 const http = require('http')
 const finalhandler = require('finalhandler')
 const serveStatic = require('serve-static')
+const compression = require('compression')()
 
 const serve = serveStatic(`${__dirname}/../client`)
 
@@ -17,6 +18,8 @@ const displayAddresses = (port) => {
 }
 
 exports.createServer = () =>
-	http.createServer((req, res) => serve(req, res, finalhandler(req, res)))
+	http.createServer((req, res) =>
+		compression(req, res, () =>
+			serve(req, res, finalhandler(req, res))))
 
 exports.displayAddresses = displayAddresses
