@@ -13,7 +13,7 @@ const deleteChild = tw.deleteChild
 
 exports.createWatcher = (root, tree, done) =>
 	chokidar.watch(root, {
-		ignored: /node_modules|\.git/,
+		ignored: /node_modules|\.git|\.gif|\.jpg|\.png|\.eot|\.ttf|\.woff/,
 		persistent: true,
 		awaitWriteFinish: {
 			stabilityThreshold: 500,
