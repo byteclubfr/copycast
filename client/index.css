@@ -21,6 +21,10 @@ a {
 	color: #333;
 }
 
+pre {
+	tab-size: 2;
+}
+
 #app {
 	display: flex;
 }
