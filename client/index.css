@@ -25,6 +25,10 @@ a {
 	display: flex;
 }
 
+.octicon {
+	margin-right: .4em;
+}
+
 /* header */
 
 .crumbs {
@@ -55,8 +59,10 @@ a {
 	color: #FFF;
 }
 
-.octicon {
-	margin-right: .4em;
+.on {
+	background: #CCC;
+	border-color: #A19FA1 #C2C0C2 #C2C0C2 #C2C0C2;
+	color: #0C0;
 }
 
 /* sidebar */
@@ -119,7 +125,7 @@ a {
 }
 
 .file.selected {
-	background: #DDD;
+	background: #CCC;
 }
 
 .filename {

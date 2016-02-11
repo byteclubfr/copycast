@@ -86,7 +86,7 @@ export const Resizer = () => div('.resizer')
 
 export const Editor = ({ selected, content, markdownPreview }) =>
 	main('.main', [
-		EditorHeader({ selected, content }),
+		EditorHeader({ selected, content, markdownPreview }),
 		div('.editor', content
 			? ( markdownPreview && mime.lookup(selected) === 'text/x-markdown'
 				? div(markdown(content))
@@ -95,25 +95,30 @@ export const Editor = ({ selected, content, markdownPreview }) =>
 			: div('.editor-no-content', '⇐ Select a file on the left'))
 	])
 
-const EditorHeader = ({ selected, content }) => {
+const EditorHeader = ({ selected, content, markdownPreview }) => {
 	const parts = selected ? selected.split('|') : []
+	const filename = parts[parts.length - 1]
 
 	return header('.editor-header', [
 		h2('.crumbs', parts.join(' ❭ ')),
-		selected
-			? a('.download', {
-				download: parts[parts.length - 1],
-				href: toDataUri(content)
-			}, [Octicon('cloud-download'), 'Download file'])
-			: null,
-		selected
-			? a('.clipboard', {
-				attributes: { 'data-clipboard-target': '.editor-code' }
-			}, [Octicon('clippy'), 'Copy file'])
-			: null,
-		selected && mime.lookup(selected) === 'text/x-markdown'
-			? a('.markdown-preview', {
-			}, [Octicon('markdown'), 'Preview'])
-			: null
+		EditorHeaderButtons({ selected, content, filename, markdownPreview })
 	])
+}
+
+const EditorHeaderButtons = ({ selected, content, filename, markdownPreview }) => {
+	if (!selected) return null
+
+	return [
+		a('.download', {
+			download: filename,
+			href: toDataUri(content)
+		}, [Octicon('cloud-download'), 'Download file']),
+		a('.clipboard', {
+			attributes: { 'data-clipboard-target': '.editor-code' }
+		}, [Octicon('clippy'), 'Copy file']),
+		mime.lookup(selected) === 'text/x-markdown'
+			? a(`.markdown-preview.${ markdownPreview ? 'on' : 'off' }`,
+					[Octicon('markdown'), 'Preview'])
+			: null
+	]
 }
