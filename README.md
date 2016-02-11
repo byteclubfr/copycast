@@ -42,6 +42,7 @@ copycast = [file system watcher](https://github.com/paulmillr/chokidar) + [webso
 - Timers indicate recent file modifications
 - Files can be downloaded
 - Files can be copied to [clipboard](https://github.com/zenorocha/clipboard.js/)
+- [Markdown preview](https://github.com/showdownjs/showdown)
 
 ## Install
 
