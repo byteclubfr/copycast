@@ -34,7 +34,7 @@ a {
 	padding: .5vw;
 }
 
-.download, .clipboard {
+.download, .clipboard, .markdown-preview {
 	align-self: center;
 	background: #EEE;
 	border: 1px solid;
@@ -50,7 +50,7 @@ a {
 	white-space: nowrap;
 }
 
-.download:hover, .clipboard:hover {
+.download:hover, .clipboard:hover, .markdown-preview:hover {
 	background: #24272D;
 	color: #FFF;
 }

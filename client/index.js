@@ -23,6 +23,12 @@ const intent = ({ DOM, socket, storage }) => {
 		socket.get('connect').map(() => true),
 		socket.get('disconnect').map(() => false))
 
+	// Editor Header buttons
+	const markdownPreview$ = DOM.select(`.editor-header .markdown-preview`).events('click')
+		.map(() => true)
+		.scan((acc) => !acc)
+		.startWith(false)
+
 	// sidebar tree
 	const selected$ = getClickIds$(DOM, 'file')
 	const collapsed$ = getClickIds$(DOM, 'dirname')
@@ -46,19 +52,19 @@ const intent = ({ DOM, socket, storage }) => {
 	// to refresh elapsed counter regularly
 	const elapsed$ = Observable.timer(0, 5000)
 
-	return [ tree$, selected$, collapsed$, conn$, hlTheme$, sidebarWidth$, elapsed$ ]
+	return [ tree$, selected$, markdownPreview$, collapsed$, conn$, hlTheme$, sidebarWidth$, elapsed$ ]
 }
 
 const model = (actions$) =>
 	Observable.combineLatest(actions$)
-		.map(([ tree, sel, ...x ]) => [ tree, sel, getContent(tree, sel), ...x ])
+		.map(([ tree, sel, markdownPreview, ...x ]) => [ tree, sel, markdownPreview, getContent(tree, sel), ...x ])
 
 const view = (state$) =>
-	state$.map(([ tree, selected, content, collapsed, conn, hlTheme, sidebarWidth ]) =>
+	state$.map(([ tree, selected, markdownPreview, content, collapsed, conn, hlTheme, sidebarWidth ]) =>
 		div('#app', [
 			Sidebar({ tree, selected, collapsed, conn, hlTheme, sidebarWidth }),
 			Resizer(),
-			Editor({ selected, content }),
+			Editor({ selected, content, markdownPreview }),
 			link({ rel: 'stylesheet', href: `hl-themes/${hlTheme}.css` })
 		]))
 

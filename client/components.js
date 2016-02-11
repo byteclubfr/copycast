@@ -4,6 +4,9 @@ import {
 } from '@cycle/dom'
 import { PATH_SEP } from './utils/tree-walker'
 import { hl, hlThemes } from './hl'
+import markdown from './markdown'
+
+import mime from 'mime-types'
 
 // protection for files with UTF-8 chars like ❭ in this one
 const toDataUri = (content) =>
@@ -81,11 +84,14 @@ const SidebarFooter = ({ conn, hlTheme }) =>
 
 export const Resizer = () => div('.resizer')
 
-export const Editor = ({ selected, content }) =>
+export const Editor = ({ selected, content, markdownPreview }) =>
 	main('.main', [
 		EditorHeader({ selected, content }),
 		div('.editor', content
-			? pre(code('.editor-code.hljs', hl(content)))
+			? ( markdownPreview && mime.lookup(selected) === 'text/x-markdown'
+				? div(markdown(content))
+				: pre(code('.editor-code.hljs', hl(content)))
+			)
 			: div('.editor-no-content', '⇐ Select a file on the left'))
 	])
 
@@ -104,6 +110,10 @@ const EditorHeader = ({ selected, content }) => {
 			? a('.clipboard', {
 				attributes: { 'data-clipboard-target': '.editor-code' }
 			}, [Octicon('clippy'), 'Copy file'])
+			: null,
+		selected && mime.lookup(selected) === 'text/x-markdown'
+			? a('.markdown-preview', {
+			}, [Octicon('markdown'), 'Preview'])
 			: null
 	])
 }
