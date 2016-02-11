@@ -11,6 +11,15 @@ const getChildren = tw.getChildren
 const addChild = tw.addChild
 const deleteChild = tw.deleteChild
 
+// TODO improve heuristics
+const isHugeFile = (name, content) => {
+	if (name === 'bundle.js') return true
+	if (/\.min\.js/.test(name)) return true
+	if (content.split('\n').length > 2000) return true
+
+	return false
+}
+
 exports.createWatcher = (root, tree, done) =>
 	chokidar.watch(root, {
 		ignored: /node_modules|\.git|\.gif|\.jpg|\.png|\.eot|\.ttf|\.woff/,
@@ -34,9 +43,11 @@ exports.createWatcher = (root, tree, done) =>
 		debug('+f', path)
 
 		fs.readFile(path, 'utf8', (err, content) => {
+			const name = P.basename(path)
+			content = isHugeFile(name, content) ? 'Content too huge' : content
 			addChild(
 				getChildren(tree, P.dirname(path)),
-				createFile(P.basename(path), content)
+				createFile(name, content)
 			)
 			done(tree)
 		})
