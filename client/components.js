@@ -3,8 +3,8 @@ import {
 	li, main, option, pre, select, span, ul
 } from '@cycle/dom'
 import { PATH_SEP } from './utils/tree-walker'
-import { hl, hlThemes } from './hl'
-import markdown from './markdown'
+import { hl, hlThemes } from './renderers/hl'
+import markdown from './renderers/markdown'
 
 import mime from 'mime-types'
 

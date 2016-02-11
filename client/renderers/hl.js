@@ -3,7 +3,7 @@ import { VNode, VText } from 'virtual-dom'
 import HTMLToVdom from 'html-to-vdom'
 import { highlightAuto } from 'highlight.js'
 
-let hlThemes = require('./hl-themes/list.json')
+let hlThemes = require('./../hl-themes/list.json')
 // remove jq garbage
 hlThemes.pop()
 hlThemes = hlThemes.map(f => f.substring(0, f.length -4))

@@ -4,7 +4,7 @@ import { div, link, makeDOMDriver } from '@cycle/dom'
 import storageDriver from '@cycle/storage'
 
 import { Sidebar, Resizer, Editor } from './components'
-import { hlThemes } from './hl'
+import { hlThemes } from './renderers/hl'
 import getClickIds$ from './utils/dom'
 import { getContent } from './utils/tree-walker'
 import createSocketIODriver from './drivers/cycle-socket.io'
