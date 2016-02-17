@@ -1,5 +1,5 @@
 [![npm version](https://badge.fury.io/js/copycast.svg)](http://badge.fury.io/js/copycast)
-[![Dependency Status](https://david-dm.org/lmtm/copycast.svg)](https://david-dm.org/lmtm/copycast)
+[![Dependency Status](https://david-dm.org/byteclubfr/copycast.svg)](https://david-dm.org/byteclubfr/copycast)
 
 # copycast
 
@@ -7,7 +7,7 @@
 
 ## Use case
 
-![copycast](https://raw.githubusercontent.com/lmtm/copycast/master/illustration.png)
+![copycast](https://raw.githubusercontent.com/byteclubfr/copycast/master/illustration.png)
 
 Long code workshops (like a few days) can rapidly turn into hell for trainees.
 
