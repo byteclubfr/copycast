@@ -1,8 +1,13 @@
 import { Observable } from 'rx'
 
 export default function createSocketIODriver() {
+	let socketOptions = {}
+	if (document.location.hostname.match(/\.localtunnel\.me$/)) {
+		// Websocket transports screws the whole thing when tunnelling through localtunnel
+		socketOptions = { transports: ['polling'] }
+	}
 
-	const socket = io.connect() // eslint-disable-line
+	const socket = io.connect(socketOptions) // eslint-disable-line
 
 	socket.on('connect', () => console.log('connected'))
 	socket.on('disconnect', (err) => console.error('disconnected', err))
