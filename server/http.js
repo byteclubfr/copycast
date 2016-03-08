@@ -3,6 +3,8 @@ const http = require('http')
 const finalhandler = require('finalhandler')
 const serveStatic = require('serve-static')
 const compression = require('compression')()
+const path = require('path')
+
 
 const serve = serveStatic(`${__dirname}/../client`)
 
@@ -17,9 +19,38 @@ const displayAddresses = (port) => {
 	})
 }
 
-exports.createServer = () =>
-	http.createServer((req, res) =>
+const prefixedDownload = (prefix, root) => {
+	const download = serveStatic(root, {
+		setHeaders: function (res, filename) {
+			// Force download
+			res.setHeader('Content-Description', 'File Transfer')
+			res.setHeader('Content-Type', 'application/octet-stream')
+			res.setHeader('Content-Disposition', 'attachment; filename=' + path.basename(filename))
+			res.setHeader('Content-Transfer-Encoding', 'binary')
+			res.setHeader('Expires', '0')
+			res.setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+			res.setHeader('Pragma', 'public')
+		}
+	})
+
+	const fullPrefix = '/' + prefix.replace(/^\/?(.*?)\/?$/, '$1') + '/'
+
+	return (req, res, next) => {
+		if (req.url.indexOf(fullPrefix) !== 0) {
+			return next()
+		}
+		const url = req.url.substring(fullPrefix.length - 1)
+		const unprefixedReq = Object.assign({}, req, { url })
+		return download(unprefixedReq, res, next)
+	}
+}
+
+exports.createServer = (root) => {
+	const download = prefixedDownload('download', root)
+	return http.createServer((req, res) =>
 		compression(req, res, () =>
-			serve(req, res, finalhandler(req, res))))
+			serve(req, res, () =>
+				download(req, res, finalhandler(req, res)))))
+}
 
 exports.displayAddresses = displayAddresses

@@ -8,10 +8,6 @@ import markdown from './renderers/markdown'
 
 import mime from 'mime-types'
 
-// protection for files with UTF-8 chars like ❭ in this one
-const toDataUri = (content) =>
-	`data:text/plain;base64,${btoa(unescape(encodeURIComponent(content)))}`
-
 /*
 +-----------------+---------------------------+
 | .logo           | .editor-header            |
@@ -111,7 +107,7 @@ const EditorHeaderButtons = ({ selected, content, filename, markdownPreview }) =
 	return [
 		a('.download', {
 			download: filename,
-			href: toDataUri(content)
+			href: '/download/' + selected.split('|').slice(1).join('/')
 		}, [Octicon('cloud-download'), 'Download file']),
 		a('.clipboard', {
 			attributes: { 'data-clipboard-target': '.editor-code' }
