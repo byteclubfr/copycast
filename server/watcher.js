@@ -16,6 +16,7 @@ const isHugeFile = (name, content) => {
 	if (name === 'bundle.js') return true
 	if (/\.min\.js/.test(name)) return true
 	if (content.split('\n').length > 2000) return true
+	if (content.length > 200000) return true
 
 	return false
 }
