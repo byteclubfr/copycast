@@ -43,6 +43,7 @@ copycast = [file system watcher](https://github.com/paulmillr/chokidar) + [webso
 - Files can be downloaded
 - Files can be copied to [clipboard](https://github.com/zenorocha/clipboard.js/)
 - [Markdown preview](https://github.com/showdownjs/showdown)
+- Images, fonts, .git, and any file matched by your .gitignore are excluded
 
 ## Install
 
