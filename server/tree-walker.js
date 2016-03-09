@@ -1,4 +1,5 @@
-var P = require('path')
+const P = require('path')
+const fs = require('fs')
 
 const createDir = (name) => ({ name, children: [] })
 
@@ -37,7 +38,22 @@ const deleteChild = (tree, path) => {
 
 const printTree = (tree) => console.log(JSON.stringify(tree, null, 2)) // eslint-disable-line
 
+const ignoreToGlobs = (ignoreFile) => {
+	try {
+		return _ignoreToGlobs(fs.readFileSync(ignoreFile))
+	} catch (e) {
+		return []
+	}
+}
+
+const _ignoreToGlobs = (content) => String(content).split('\n')
+	.map(line => line.trim())
+	.filter(line => line.length > 0) // Ignore empty lines
+	.filter(line => !line.match(/^#/)) // Ignore comments
+	.map(glob => P.join('**', glob)) // Convert "node_modules" to "**/node_modules"
+	.reduce((globs, glob) => globs.concat([glob, P.join(glob, '**')]), []) // Ignore glob itself, but also sub-paths
+
 module.exports = {
-	createDir, createFile, getChildren, addChild, deleteChild, printTree
+	createDir, createFile, getChildren, addChild, deleteChild, printTree, ignoreToGlobs
 }
 
