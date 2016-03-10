@@ -9,9 +9,9 @@ export default function createSocketIODriver() {
 
 	const socket = io.connect(socketOptions) // eslint-disable-line
 
-	socket.on('connect', () => console.log('connected'))
-	socket.on('disconnect', (err) => console.error('disconnected', err))
-	socket.on('error', (err) => console.error('error', err))
+	// socket.on('connect', () => console.log('connected'))
+	// socket.on('disconnect', (err) => console.error('disconnected', err))
+	// socket.on('error', (err) => console.error('error', err))
 
 	function get(eventName) {
 		return Observable.create(observer => {

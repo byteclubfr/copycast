@@ -24,7 +24,7 @@ const intent = ({ DOM, socket, storage }) => {
 		socket.get('disconnect').map(() => false))
 
 	// Editor Header buttons
-	const markdownPreview$ = DOM.select(`.editor-header .markdown-preview`).events('click')
+	const markdownPreview$ = DOM.select('.editor-header .markdown-preview').events('click')
 		.map(() => true)
 		.scan((acc) => !acc)
 		.startWith(false)

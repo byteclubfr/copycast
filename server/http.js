@@ -5,7 +5,11 @@ const serveStatic = require('serve-static')
 const compression = require('compression')()
 
 const flatten = require('./tree-walker').flatten
+<<<<<<< HEAD
 var Zip = require('easy-zip').EasyZip
+=======
+const Zip = require('easy-zip').EasyZip
+>>>>>>> master
 
 const serve = serveStatic(`${__dirname}/../client`)
 
@@ -23,8 +27,8 @@ const displayAddresses = (port) => {
 // Handle '/{root}.zip' URL
 const zipper = (tree, req, res, next) => {
 	if (req.url === '/' + tree.name + '.zip') {
-		var files = flatten(tree, false)
-		var zip = new Zip()
+		const files = flatten(tree, false)
+		const zip = new Zip()
 		zip.batchAdd(files.map(f => ({ source: f, target: f })), () => {
 			zip.writeToResponse(res, tree.name)
 		})

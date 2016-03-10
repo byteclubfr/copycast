@@ -35,7 +35,7 @@ const Octicon = (name) => span(`.octicon.octicon-${name}`)
 export const Sidebar = ({ tree, selected, collapsed, conn, hlTheme, sidebarWidth }) =>
 	aside('.sidebar', { style: { width: `${sidebarWidth}px` } }, [
 		h1('.logo', [
-			a({ href: 'https://github.com/lmtm/copycast' }, 'copycast'),
+			a({ href: 'https://github.com/byteclubfr/copycast' }, 'copycast'),
 			a({ href: '/' + tree.name + '.zip', title: 'Download zip archive' }, Octicon('file-zip'))
 		]),
 		div('.tree', Dir({ root: true, path: tree.name, tree, selected, collapsed })),
@@ -80,7 +80,7 @@ const SidebarFooter = ({ conn, hlTheme }) =>
 	footer('.sidebar-footer', [
 		div('.status', [
 			span(`.conn-${ conn ? 'on' : 'off' }`, { title: 'Socket connection status' }, Octicon('plug')),
-			a({ href: 'https://github.com/lmtm/copycast' }, Octicon('mark-github'))
+			a({ href: 'https://github.com/byteclubfr/copycast' }, Octicon('mark-github'))
 		]),
 		div(select('.hl-themes', hlThemes.map(t => option({ selected: t === hlTheme }, t))))
 	])
