@@ -64,6 +64,8 @@ Open `localhost:YOUR_PORT` in a web browser
 - `-p`: default to `42000`
 - `-l [subdomain]`: to enable localtunnel if you need a public URL, default to false
 
+Note: if you open a localtunnel, the subdomain will be automatically stored in a local `.copycast` file and will be requested next time so that URL won't change between sessions.
+
 ## Dev
 
 To start the server and build the client:

@@ -5,10 +5,18 @@ const debug = require('debug')('socket')
 const http = require('./http')
 const createWatcher = require('./watcher').createWatcher
 
+const parseDomain = require('parse-domain')
+const config = require('./configuration')
 const openTunnel = require('./localtunnel').open
 
 
 exports.start = (options) => {
+	if (options.localtunnel === true) {
+		// requested a localtunnel without specifying subdomain
+		// check if we find a previous one
+		options.localtunnel = config.get('localtunnel_subdomain') || true
+	}
+
 	const DIR = path.resolve(options.dir || '.')
 	const PORT = Number(options.port) || 42000
 	const LT = options.localtunnel || false
@@ -25,7 +33,14 @@ exports.start = (options) => {
 				port: PORT,
 				subdomain: (typeof LT === 'string') ? LT : false
 			})
-			.on('url', console.log) // eslint-disable-line
+			.on('url', (url) => {
+				console.log(url) // eslint-disable-line
+				// store subdomain
+				const domain = parseDomain(url)
+				if (domain) {
+					config.set({ localtunnel_subdomain: domain.subdomain })
+				}
+			})
 			.on('error', (err) => console.error('[localtunnel] %s', err)) // eslint-disable-line
 		}
 	})
