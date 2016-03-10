@@ -5,11 +5,7 @@ const serveStatic = require('serve-static')
 const compression = require('compression')()
 
 const flatten = require('./tree-walker').flatten
-<<<<<<< HEAD
-var Zip = require('easy-zip').EasyZip
-=======
 const Zip = require('easy-zip').EasyZip
->>>>>>> master
 
 const serve = serveStatic(`${__dirname}/../client`)
 
