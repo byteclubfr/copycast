@@ -48,6 +48,7 @@
     "finalhandler": "^0.4.1",
     "highlight.js": "^9.1.0",
     "html-to-vdom": "^0.7.0",
+    "localtunnel": "^1.8.1",
     "mime-types": "^2.1.9",
     "minimist": "^1.2.0",
     "octicons": "^3.4.1",

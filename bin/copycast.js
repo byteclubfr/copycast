@@ -5,5 +5,6 @@ var copycast = require('../server')
 
 copycast.start({
 	dir: argv.d,
-	port: argv.p
+	port: argv.p,
+	localtunnel: argv.l
 })
