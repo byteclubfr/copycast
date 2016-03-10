@@ -1,3 +1,5 @@
+'use strict'
+// TODO remove above pragma in next V8
 const P = require('path')
 const fs = require('fs')
 
@@ -6,7 +8,7 @@ const createDir = (name) => ({ name, children: [] })
 const createFile = (name, content) => ({ name, content })
 
 const getChildren = (tree, path) => {
-	var children = tree.children
+	let children = tree.children
 	path.split('/').forEach((dir) => {
 		const child = children.find(c => c.name === dir)
 		if (child) children = child.children
@@ -28,7 +30,7 @@ const addChild = (children, child) => {
 }
 
 const deleteChild = (tree, path) => {
-	var children = getChildren(tree, P.dirname(path))
+	let children = getChildren(tree, P.dirname(path))
 	children.splice(
 		children.findIndex(c => c.name === P.basename(path)),
 		1

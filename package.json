@@ -13,6 +13,7 @@
     "build": "browserify client/index.js -t babelify -t uglifyify | uglifyjs - -o client/bundle.js",
     "hl": "cpx 'node_modules/highlight.js/styles/*.css' client/hl-themes",
     "hl-list": "babel-node bin/hl-list.js",
+    "lint": "eslint server && eslint client --ignore-path .gitignore",
     "octicons": "cpx 'node_modules/octicons/octicons/*.*' client/octicons",
     "start": "node ./bin/copycast.js",
     "prewatch": "npm run assets",
@@ -63,6 +64,7 @@
     "babelify": "^7.2.0",
     "browserify": "^13.0.0",
     "cpx": "^1.2.1",
+    "eslint": "^2.3.0",
     "uglify-js": "^2.6.1",
     "uglifyify": "^3.0.1",
     "watchify": "^3.7.0"

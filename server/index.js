@@ -10,7 +10,7 @@ exports.start = (options) => {
 	const PORT = Number(options.port) || 42000
 
 	// state
-	var tree = { name: path.basename(DIR), children: [] }
+	const tree = { name: path.basename(DIR), children: [] }
 
 	const server = http.createServer(tree)
 	const io = socketIO(server)
