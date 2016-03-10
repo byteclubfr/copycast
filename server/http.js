@@ -4,6 +4,9 @@ const finalhandler = require('finalhandler')
 const serveStatic = require('serve-static')
 const compression = require('compression')()
 
+const flatten = require('./tree-walker').flatten
+var Zip = require('easy-zip').EasyZip
+
 const serve = serveStatic(`${__dirname}/../client`)
 
 // used to communicate easily the local network IP address to students
@@ -17,9 +20,23 @@ const displayAddresses = (port) => {
 	})
 }
 
-exports.createServer = () =>
+// Handle '/{root}.zip' URL
+const zipper = (tree, req, res, next) => {
+	if (req.url === '/' + tree.name + '.zip') {
+		var files = flatten(tree, false)
+		var zip = new Zip()
+		zip.batchAdd(files.map(f => ({ source: f, target: f })), () => {
+			zip.writeToResponse(res, tree.name)
+		})
+		return
+	}
+	next()
+}
+
+exports.createServer = (tree) =>
 	http.createServer((req, res) =>
-		compression(req, res, () =>
-			serve(req, res, finalhandler(req, res))))
+		zipper(tree, req, res, () =>
+			compression(req, res, () =>
+				serve(req, res, finalhandler(req, res)))))
 
 exports.displayAddresses = displayAddresses

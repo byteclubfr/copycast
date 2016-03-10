@@ -16,6 +16,10 @@ h1, h2 {
 	letter-spacing: 0.2em;
 	margin: 0;
 }
+h1 span.octicon, h2 span.octicon {
+	font-size: 1em;
+	margin: 0 0.25em;
+}
 
 a {
 	color: #333;

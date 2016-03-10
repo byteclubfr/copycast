@@ -53,7 +53,19 @@ const _ignoreToGlobs = (content) => String(content).split('\n')
 	.map(glob => P.join('**', glob)) // Convert "node_modules" to "**/node_modules"
 	.reduce((globs, glob) => globs.concat([glob, P.join(glob, '**')]), []) // Ignore glob itself, but also sub-paths
 
+const flatten = (tree, withRoot) => _flatten(tree, withRoot ? tree.name : '')
+const _flatten = (node, path) => {
+	if (node.children) {
+		return node.children.map(child => _flatten(child, P.join(path, child.name)))
+			// Array of Array of String => Array of String
+			.reduce((arr, curr) => arr.concat(curr), [])
+	} else if (node.content) {
+		// Single file
+		return [path]
+	}
+}
+
 module.exports = {
-	createDir, createFile, getChildren, addChild, deleteChild, printTree, ignoreToGlobs
+	createDir, createFile, getChildren, addChild, deleteChild, printTree, ignoreToGlobs, flatten
 }
 
