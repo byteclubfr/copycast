@@ -12,9 +12,5 @@ const openTunnel = (e, options, emitUrl) => lt(options.port, options, (err, tunn
 	tunnel.on('close', () => e.emit('close'))
 })
 
-exports.open = (port) => openTunnel(new EventEmitter(), {
-	//local_host: 'localhost',
-	//subdomain: '',
-	host: 'http://localtunnel.me',
-	port: port,
-}, true) // First time open: emit 'url' event
+// options: port, subdomain, host, local_host
+exports.open = (options) => openTunnel(new EventEmitter(), options, true)

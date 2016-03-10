@@ -62,7 +62,7 @@ Open `localhost:YOUR_PORT` in a web browser
 
 - `-d`: default to `.`
 - `-p`: default to `42000`
-- `-l`: to enable localtunnel if you need a public URL, default to false
+- `-l [subdomain]`: to enable localtunnel if you need a public URL, default to false
 
 ## Dev
 

@@ -21,9 +21,12 @@ exports.start = (options) => {
 	server.listen(PORT, () => {
 		http.displayAddresses(PORT)
 		if (LT) {
-			openTunnel(PORT)
-				.on('url', console.log) // eslint-disable-line
-				.on('error', (err) => console.error('[localtunnel] %s', err)) // eslint-disable-line
+			openTunnel({
+				port: PORT,
+				subdomain: (typeof LT === 'string') ? LT : false
+			})
+			.on('url', console.log) // eslint-disable-line
+			.on('error', (err) => console.error('[localtunnel] %s', err)) // eslint-disable-line
 		}
 	})
 
