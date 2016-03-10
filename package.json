@@ -1,6 +1,6 @@
 {
   "name": "copycast",
-  "version": "1.3.0",
+  "version": "2.1.0",
   "description": "Live remote copy-pasta explorer for training sessions ",
   "bin": {
     "copycast": "bin/copycast.js"
@@ -44,6 +44,7 @@
     "clipboard": "^1.5.5",
     "compression": "^1.6.1",
     "debug": "^2.2.0",
+    "easy-zip": "0.0.4",
     "finalhandler": "^0.4.1",
     "highlight.js": "^9.1.0",
     "html-to-vdom": "^0.7.0",

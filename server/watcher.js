@@ -10,19 +10,25 @@ const createFile = tw.createFile
 const getChildren = tw.getChildren
 const addChild = tw.addChild
 const deleteChild = tw.deleteChild
+const ignoreToGlobs = tw.ignoreToGlobs
 
 // TODO improve heuristics
 const isHugeFile = (name, content) => {
-	if (name === 'bundle.js') return true
-	if (/\.min\.js/.test(name)) return true
 	if (content.split('\n').length > 2000) return true
+	if (content.length > 200000) return true
 
 	return false
 }
 
+const ignoredPatterns = () => {
+	return ignoreToGlobs('.gitignore')
+}
+
 exports.createWatcher = (root, tree, done) =>
 	chokidar.watch(root, {
-		ignored: /node_modules|\.git|\.gif|\.jpg|\.png|\.eot|\.ttf|\.woff/,
+		ignored: ignoredPatterns() // Get ignored files from standard ignore files
+			// and add static files and files we anyway always want to ignore
+			.concat(['**/.git', '**/*.gif', '**/*.jpg', '**/*.png', '**/*.eot', '**/*.ttf', '**/*.woff']),
 		persistent: true,
 		awaitWriteFinish: {
 			stabilityThreshold: 500,

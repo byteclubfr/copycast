@@ -30,7 +30,10 @@ const Octicon = (name) => span(`.octicon.octicon-${name}`)
 
 export const Sidebar = ({ tree, selected, collapsed, conn, hlTheme, sidebarWidth }) =>
 	aside('.sidebar', { style: { width: `${sidebarWidth}px` } }, [
-		h1('.logo', a({ href: 'https://github.com/lmtm/copycast' }, 'copycast')),
+		h1('.logo', [
+			a({ href: 'https://github.com/lmtm/copycast' }, 'copycast'),
+			a({ href: '/' + tree.name + '.zip', title: 'Download zip archive' }, Octicon('file-zip'))
+		]),
 		div('.tree', Dir({ root: true, path: tree.name, tree, selected, collapsed })),
 		SidebarFooter({ conn, hlTheme })
 	])
