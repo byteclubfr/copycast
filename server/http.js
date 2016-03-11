@@ -38,6 +38,7 @@ const zipper = (tree, req, res, next) => {
 // Handle '/download/{path}' URLs
 const prefixedDownload = (prefix, root) => {
 	const download = serveStatic(root, {
+		dotfiles: 'allow',
 		setHeaders: function (res, filename) {
 			// Force download
 			res.setHeader('Content-Description', 'File Transfer')
