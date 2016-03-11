@@ -5,8 +5,9 @@ const serveStatic = require('serve-static')
 const compression = require('compression')()
 const path = require('path')
 
-
-const flatten = require('./tree-walker').flatten
+const treeWalker = require('./tree-walker')
+const flatten = treeWalker.flatten
+const hasChild = treeWalker.hasChild
 const Zip = require('easy-zip').EasyZip
 
 const serve = serveStatic(`${__dirname}/../client`)
@@ -36,7 +37,7 @@ const zipper = (tree, req, res, next) => {
 }
 
 // Handle '/download/{path}' URLs
-const prefixedDownload = (prefix, root) => {
+const prefixedDownload = (prefix, root, tree) => {
 	const download = serveStatic(root, {
 		dotfiles: 'allow',
 		setHeaders: function (res, filename) {
@@ -51,20 +52,24 @@ const prefixedDownload = (prefix, root) => {
 		}
 	})
 
+	// normalize prefix: prepend/append slashes
 	const fullPrefix = '/' + prefix.replace(/^\/?(.*?)\/?$/, '$1') + '/'
 
 	return (req, res, next) => {
 		if (req.url.indexOf(fullPrefix) !== 0) {
-			return next()
+			return next() // exclude URLs not starting with prefix
 		}
 		const url = req.url.substring(fullPrefix.length - 1)
+		if (!hasChild(tree, url)) {
+			return next() // exclude unexposed files
+		}
 		const unprefixedReq = Object.assign({}, req, { url })
 		return download(unprefixedReq, res, next)
 	}
 }
 
 exports.createServer = (root, tree) => {
-	const download = prefixedDownload('download', root)
+	const download = prefixedDownload('download', root, tree)
 	return http.createServer((req, res) =>
 		zipper(tree, req, res, () =>
 			compression(req, res, () =>
