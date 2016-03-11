@@ -44,6 +44,7 @@ copycast = [file system watcher](https://github.com/paulmillr/chokidar) + [webso
 - Files can be copied to [clipboard](https://github.com/zenorocha/clipboard.js/)
 - [Markdown preview](https://github.com/showdownjs/showdown)
 - Images, fonts, .git, and any file matched by your .gitignore are excluded
+- Integration with [localtunnel](http://localtunnel.me)
 
 ## Install
 
@@ -61,6 +62,9 @@ Open `localhost:YOUR_PORT` in a web browser
 
 - `-d`: default to `.`
 - `-p`: default to `42000`
+- `-l [subdomain]`: to enable localtunnel if you need a public URL, default to false
+
+Note: if you open a localtunnel, the subdomain will be automatically stored in a local `.copycast` file and will be requested next time so that URL won't change between sessions.
 
 ## Dev
 
