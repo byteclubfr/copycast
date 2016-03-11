@@ -1,28 +1,20 @@
 {
     "rules": {
-        "indent": [
-            2,
-            "tab"
-        ],
-        "quotes": [
-            2,
-            "single"
-        ],
-        "linebreak-style": [
-            2,
-            "unix"
-        ],
-        "semi": [
-            2,
-            "never"
-        ]
+        "indent": [ 2, "tab" ],
+        "linebreak-style": [ 2, "unix" ],
+        "no-var": [ 2 ],
+        "quotes": [ 2, "single" ],
+        "semi": [ 2, "never" ]
     },
     "env": {
         "es6": true,
         "node": true,
         "browser": true
     },
-    "ecmaFeatures": {
+    "parserOptions": {
+      "sourceType": "module",
+      "ecmaVersion": 7,
+      "ecmaFeatures": {
         "arrowFunctions": true,
         "blockBindings": true,
         "classes": true,
@@ -32,6 +24,7 @@
         "modules": true,
         "objectLiteralShorthandMethods": true,
         "spread": true
+      }
     },
     "extends": "eslint:recommended"
 }
