@@ -24,7 +24,7 @@ exports.start = (options) => {
 	// state
 	const tree = { name: path.basename(DIR), children: [] }
 
-	const server = http.createServer(tree)
+	const server = http.createServer(DIR, tree)
 	const io = socketIO(server)
 	server.listen(PORT, () => {
 		http.displayAddresses(PORT)

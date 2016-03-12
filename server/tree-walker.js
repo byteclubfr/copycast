@@ -67,7 +67,13 @@ const _flatten = (node, path) => {
 	}
 }
 
+const hasChild = (tree, path) => {
+	const parsed = P.parse(path)
+	return getChildren(tree, parsed.dir)
+		.some(child => child.name === parsed.base)
+}
+
 module.exports = {
-	createDir, createFile, getChildren, addChild, deleteChild, printTree, ignoreToGlobs, flatten
+	createDir, createFile, getChildren, addChild, deleteChild, printTree, ignoreToGlobs, flatten, hasChild
 }
 
