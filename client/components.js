@@ -104,7 +104,7 @@ const EditorHeader = ({ selected, content, markdownPreview }) => {
 	])
 }
 
-const EditorHeaderButtons = ({ selected, content, filename, markdownPreview }) => {
+const EditorHeaderButtons = ({ selected, filename, markdownPreview }) => {
 	if (!selected) return null
 
 	return [
