@@ -27,7 +27,7 @@ exports.start = (options) => {
 	const server = http.createServer(DIR, tree)
 	const io = socketIO(server)
 	server.listen(PORT, () => {
-		http.displayAddresses(PORT, tree.name)
+		http.displayAddresses(PORT, options.git && tree.name)
 		if (LT) {
 			openTunnel({
 				port: PORT,

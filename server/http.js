@@ -25,7 +25,9 @@ const remoteIPs = externalIPs.length > 0 ? externalIPs : internalIPs
 // Used to communicate easily the local network IP address to students
 const displayAddresses = (port, gitName) => remoteIPs.forEach(ip => {
 	console.log(`Web: http://${ip}:${port}`) // eslint-disable-line
-	console.log(`Git: http://${ip}:${port}/${gitName}.git`) // eslint-disable-line
+	if (gitName) {
+		console.log(`Git: http://${ip}:${port}/${gitName}.git`) // eslint-disable-line
+	}
 })
 
 // Handle '/{root}.zip' URL
@@ -101,16 +103,16 @@ const git = name => (req, res, next) => {
 const onerror = err => console.error(err.stack || err.toString()) // eslint-disable-line no-console
 
 const handler = (middlewares) => (req, res) => middlewares.length > 0
-	? middlewares[0](req, res, err => err
+	? (middlewares[0] || ((req, res, next) => next()))(req, res, err => err
 			? finalhandler(req, res, { onerror })(err)
 			: handler(middlewares.slice(1))(req, res)
 		)
 	: null
 
-exports.createServer = (root, tree) => {
+exports.createServer = (root, tree, enableGit) => {
 	const download = prefixedDownload('download', root, tree)
 	return http.createServer(handler([
-		git(tree.name),
+		enableGit && git(tree.name),
 		zipper(tree),
 		compression,
 		serve,

@@ -6,5 +6,6 @@ const copycast = require('../server')
 copycast.start({
 	dir: argv.d,
 	port: argv.p,
-	localtunnel: argv.l
+	localtunnel: argv.l,
+	git: !argv.G
 })
