@@ -4,11 +4,12 @@ const finalhandler = require('finalhandler')
 const serveStatic = require('serve-static')
 const compression = require('compression')()
 const path = require('path')
+const { access } = require('fs')
+const { spawn } = require('child_process')
 
-const treeWalker = require('./tree-walker')
-const flatten = treeWalker.flatten
-const hasChild = treeWalker.hasChild
+const { flatten, hasChild } = require('./tree-walker')
 const Zip = require('easy-zip').EasyZip
+const gitBackend = require('git-http-backend')
 
 const serve = serveStatic(`${__dirname}/../client`)
 
@@ -68,6 +69,31 @@ const prefixedDownload = (prefix, root, tree) => {
 	}
 }
 
+const git = name => (req, res, next) => {
+	if (!req.url.startsWith('/' + name + '.git')) {
+		next()
+	}
+
+	const dir = path.resolve('.git')
+
+	const serveGit = () => req.pipe(gitBackend(req.url, (err, service) => {
+		if (err) {
+			return next(err)
+		}
+
+		if (service.cmd === 'git-receive-pack') {
+			res.statusCode = 403
+			return next(Error('READONLY'))
+		}
+
+		res.setHeader('Content-Type', service.type)
+		const proc = spawn(service.cmd, service.args.concat(dir))
+		proc.stdout.pipe(service.createStream()).pipe(proc.stdin)
+	})).pipe(res)
+
+	access(dir, err => err ? next(err) : serveGit())
+}
+
 const onerror = err => console.error(err.stack || err.toString()) // eslint-disable-line no-console
 
 const handler = (middlewares) => (req, res) => middlewares.length > 0
@@ -80,6 +106,7 @@ const handler = (middlewares) => (req, res) => middlewares.length > 0
 exports.createServer = (root, tree) => {
 	const download = prefixedDownload('download', root, tree)
 	return http.createServer(handler([
+		git(tree.name),
 		zipper(tree),
 		compression,
 		serve,
