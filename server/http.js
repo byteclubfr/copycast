@@ -13,16 +13,20 @@ const gitBackend = require('git-http-backend')
 
 const serve = serveStatic(`${__dirname}/../client`)
 
-// used to communicate easily the local network IP address to students
-const displayAddresses = (port) => {
-	const interfaces = os.networkInterfaces()
-	Object.keys(interfaces).forEach((dev) => {
-		interfaces[dev].forEach((details) => {
-			if (details.family !== 'IPv4') return
-			console.log(`http://${details.address}:${port}`) // eslint-disable-line
-		})
-	})
-}
+// Grab remotely accessible server IPs, exclude localhost when possible
+const interfaces = os.networkInterfaces()
+const addresses = Object.keys(interfaces)
+	.reduce((itfs, itf) => itfs.concat(interfaces[itf]), [])
+	.filter(itf => itf.family === 'IPv4')
+const externalIPs = addresses.filter(itf => !itf.internal).map(itf => itf.address)
+const internalIPs = addresses.filter(itf => itf.internal).map(itf => itf.address)
+const remoteIPs = externalIPs.length > 0 ? externalIPs : internalIPs
+
+// Used to communicate easily the local network IP address to students
+const displayAddresses = (port, gitName) => remoteIPs.forEach(ip => {
+	console.log(`Web: http://${ip}:${port}`) // eslint-disable-line
+	console.log(`Git: http://${ip}:${port}/${gitName}.git`) // eslint-disable-line
+})
 
 // Handle '/{root}.zip' URL
 const zipper = tree => (req, res, next) => {
