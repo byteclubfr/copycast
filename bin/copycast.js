@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-var argv = require('minimist')(process.argv.slice(2))
-var copycast = require('../server')
+const argv = require('minimist')(process.argv.slice(2))
+const copycast = require('../server')
 
 copycast.start({
 	dir: argv.d,

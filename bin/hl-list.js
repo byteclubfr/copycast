@@ -1,4 +1,4 @@
-import { writeFileSync, readdirSync } from 'fs'
+const { writeFileSync, readdirSync } = require('fs')
 
 const files = readdirSync('./client/hl-themes').filter(f => f.match(/\.css$/))
 const json = JSON.stringify(files, null, '  ')

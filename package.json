@@ -11,7 +11,7 @@
     "prebuild": "npm run assets",
     "build": "browserify client/index.js -t babelify -t uglifyify | uglifyjs - -o client/bundle.js",
     "hl": "cpx 'node_modules/highlight.js/styles/*.css' client/hl-themes",
-    "hl-list": "babel-node bin/hl-list.js",
+    "hl-list": "node bin/hl-list.js",
     "lint": "eslint server && eslint client --ignore-path .gitignore",
     "octicons": "cpx 'node_modules/octicons/octicons/*.*' client/octicons",
     "start": "node ./bin/copycast.js",
