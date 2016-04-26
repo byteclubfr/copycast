@@ -3,14 +3,8 @@ const fs = require('fs')
 const chokidar = require('chokidar')
 const debug = require('debug')('watcher')
 
-// TODO use destructuring when available
-const tw = require('./tree-walker')
-const createDir = tw.createDir
-const createFile = tw.createFile
-const getChildren = tw.getChildren
-const addChild = tw.addChild
-const deleteChild = tw.deleteChild
-const ignoreToGlobs = tw.ignoreToGlobs
+const { createDir, createFile, getChildren, addChild,
+	deleteChild, ignoreToGlobs } = require('./tree-walker')
 
 // TODO improve heuristics
 const isHugeFile = (name, content) => {

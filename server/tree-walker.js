@@ -1,5 +1,3 @@
-'use strict'
-// TODO remove above pragma in next V8
 const P = require('path')
 const fs = require('fs')
 
