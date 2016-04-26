@@ -68,9 +68,11 @@ const prefixedDownload = (prefix, root, tree) => {
 	}
 }
 
+const onerror = err => console.error(err.stack || err.toString()) // eslint-disable-line no-console
+
 const handler = (middlewares) => (req, res) => middlewares.length > 0
 	? middlewares[0](req, res, err => err
-			? finalhandler(req, res)(err)
+			? finalhandler(req, res, { onerror })(err)
 			: handler(middlewares.slice(1))(req, res)
 		)
 	: null
