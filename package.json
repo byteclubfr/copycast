@@ -23,6 +23,9 @@
     "client/bundle.js",
     "client/index.css",
     "client/index.html",
+    "client/hl-themes",
+    "client/octicons",
+    "client/favicon.ico",
     "server"
   ],
   "repository": {
