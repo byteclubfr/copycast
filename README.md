@@ -45,6 +45,7 @@ copycast = [file system watcher](https://github.com/paulmillr/chokidar) + [webso
 - [Markdown preview](https://github.com/showdownjs/showdown)
 - Images, fonts, .git, and any file matched by your .gitignore are excluded
 - Integration with [localtunnel](http://localtunnel.me)
+- If a ``.git`` folder is found, you can ``git pull http://{HOST}:{PORT}/project.git``
 
 ## Install
 
@@ -71,7 +72,6 @@ Note: if you open a localtunnel, the subdomain will be automatically stored in a
 To start the server and build the client:
 ```sh
 npm i
-npm run start
 npm run watch
 ```
 
