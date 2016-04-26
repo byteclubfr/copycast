@@ -7,7 +7,6 @@
   },
   "scripts": {
     "assets": "npm run octicons && npm run hl && npm run hl-list",
-    "postinstall": "npm run octicons && npm run hl",
     "prepublish": "npm run build",
     "prebuild": "npm run assets",
     "build": "browserify client/index.js -t babelify -t uglifyify | uglifyjs - -o client/bundle.js",
