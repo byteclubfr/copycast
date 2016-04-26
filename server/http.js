@@ -24,7 +24,7 @@ const displayAddresses = (port) => {
 }
 
 // Handle '/{root}.zip' URL
-const zipper = (tree, req, res, next) => {
+const zipper = tree => (req, res, next) => {
 	if (req.url === '/' + tree.name + '.zip') {
 		const files = flatten(tree, false)
 		const zip = new Zip()
@@ -68,13 +68,21 @@ const prefixedDownload = (prefix, root, tree) => {
 	}
 }
 
+const handler = (middlewares) => (req, res) => middlewares.length > 0
+	? middlewares[0](req, res, err => err
+			? finalhandler(req, res)(err)
+			: handler(middlewares.slice(1))(req, res)
+		)
+	: null
+
 exports.createServer = (root, tree) => {
 	const download = prefixedDownload('download', root, tree)
-	return http.createServer((req, res) =>
-		zipper(tree, req, res, () =>
-			compression(req, res, () =>
-				serve(req, res, () =>
-					download(req, res, finalhandler(req, res))))))
+	return http.createServer(handler([
+		zipper(tree),
+		compression,
+		serve,
+		download
+	]))
 }
 
 exports.displayAddresses = displayAddresses
