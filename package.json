@@ -6,6 +6,7 @@
     "copycast": "bin/copycast.js"
   },
   "scripts": {
+    "preinstall": "node bin/check-node.js",
     "assets": "npm-run-all octicons hl hl-list",
     "prepublish": "npm run build",
     "prebuild": "npm run assets",
@@ -77,9 +78,5 @@
     "uglifyify": "^3.0.1",
     "virtual-dom": "^2.1.1",
     "watchify": "^3.7.0"
-  },
-  "engineStrict": true,
-  "engines": {
-    "node": ">= 6.0.0"
   }
 }
