@@ -6,7 +6,7 @@
 var version = process.versions.node
 var major = Number(version.split('.')[0])
 var parsed = !isNaN(major)
-var invalid = parsed && major <= 6
+var invalid = parsed && major < 6
 
 if (invalid) {
 	process.stderr.write("+---------------------------------------------------------+\n")
