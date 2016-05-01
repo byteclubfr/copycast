@@ -1,3 +1,4 @@
+import last from 'lodash.last'
 import { Observable } from 'rx'
 import { run } from '@cycle/core'
 import { div, link, makeDOMDriver } from '@cycle/dom'
@@ -6,7 +7,7 @@ import storageDriver from '@cycle/storage'
 import { Sidebar, Resizer, Editor } from './components'
 import { hlThemes } from './renderers/hl'
 import getClickIds$ from './utils/dom'
-import { getContent } from './utils/tree-walker'
+import { getContents } from './utils/tree-walker'
 import createSocketIODriver from './drivers/cycle-socket.io'
 
 import Clipboard from 'clipboard'
@@ -14,23 +15,44 @@ new Clipboard('.clipboard')
 
 // localStorage key
 const LS_HL_THEME = 'copycast.hl-theme'
+// in ms
+const REFRESH_TIMER = 5000
+// number of previous trees kept in memory
+const DIFF_COUNT = 5
 
 const intent = ({ DOM, socket, storage }) => {
 	// from server's watcher
 	const tree$ = socket.get('tree')
+		.scan((acc, tree) => {
+			acc.push(tree)
+			// prune
+			if (acc.length > DIFF_COUNT) acc.shift()
+			return acc
+		}, [])
 	// to add visual indicator
 	const conn$ = Observable.merge(
 		socket.get('connect').map(() => true),
 		socket.get('disconnect').map(() => false))
 
 	// Editor Header buttons
-	const markdownPreview$ = DOM.select('.editor-header .markdown-preview').events('click')
+	const markdownPreview$ = DOM.select('.markdown-preview').events('click')
 		.map(() => true)
-		.scan((acc) => !acc)
+		.scan(acc => !acc)
 		.startWith(false)
 
+	const revClick$ = DOM.select('.editor-timeline .last').events('click')
+		.map(ev => ev.target.checked)
+		.startWith(true)
+
+	const revChange$ = DOM.select('.editor-timeline .timeline').events('change')
+		.map(ev => Number(ev.target.value))
+		.startWith(0)
+
+	const selRev$ = Observable.combineLatest([ revClick$, revChange$ ])
+		.map(([click, change]) => !click ? change : null)
+
 	// sidebar tree
-	const selected$ = getClickIds$(DOM, 'file')
+	const sel$ = getClickIds$(DOM, 'file')
 	const collapsed$ = getClickIds$(DOM, 'dirname')
 		.scan((set, v) => {
 			if (!v) return set
@@ -50,21 +72,23 @@ const intent = ({ DOM, socket, storage }) => {
 		.map(v => v === null ? hlThemes[34] : v) // default to GitHub theme
 
 	// to refresh elapsed counter regularly
-	const elapsed$ = Observable.timer(0, 5000)
+	const elapsed$ = Observable.timer(0, REFRESH_TIMER)
 
-	return [ tree$, selected$, markdownPreview$, collapsed$, conn$, hlTheme$, sidebarWidth$, elapsed$ ]
+	return [ tree$, sel$, markdownPreview$, selRev$,
+		collapsed$, conn$, hlTheme$, sidebarWidth$, elapsed$ ]
 }
 
-const model = (actions$) =>
-	Observable.combineLatest(actions$)
-		.map(([ tree, sel, markdownPreview, ...x ]) => [ tree, sel, markdownPreview, getContent(tree, sel), ...x ])
+const model = (actions$) => {
+	return Observable.combineLatest(actions$)
+		.map(([ tree, sel, ...x ]) => [ last(tree), sel, getContents(tree, sel), ...x ])
+}
 
 const view = (state$) =>
-	state$.map(([ tree, selected, markdownPreview, content, collapsed, conn, hlTheme, sidebarWidth ]) =>
+	state$.map(([ tree, sel, contents, markdownPreview, selRev, collapsed, conn, hlTheme, sidebarWidth ]) =>
 		div('#app', [
-			Sidebar({ tree, selected, collapsed, conn, hlTheme, sidebarWidth }),
+			Sidebar({ tree, sel, collapsed, conn, hlTheme, sidebarWidth }),
 			Resizer(),
-			Editor({ selected, content, markdownPreview }),
+			Editor({ sel, contents, markdownPreview, selRev }),
 			link({ rel: 'stylesheet', href: `hl-themes/${hlTheme}.css` })
 		]))
 

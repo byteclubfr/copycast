@@ -68,6 +68,7 @@
     "eslint": "^2.3.0",
     "highlight.js": "^9.2.0",
     "html-to-vdom": "^0.7.0",
+    "lodash.last": "^3.0.0",
     "mime-types": "^2.1.10",
     "nodemon": "^1.9.1",
     "npm-run-all": "^1.8.0",

@@ -185,6 +185,12 @@ pre {
 	display: flex;
 }
 
+.editor-timeline {
+	align-items: center;
+	display: flex;
+	margin-left: 1em;
+}
+
 .main {
 	flex-grow: 1;
 	overflow: auto;

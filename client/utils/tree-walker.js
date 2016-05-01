@@ -9,7 +9,7 @@ export const getChildren = (tree, path) => {
 	return children
 }
 
-export const getContent = (tree, selected) => {
+const getContent = (tree, selected) => {
 	if (!selected) return null
 
 	let path = selected.split(PATH_SEP)
@@ -20,3 +20,8 @@ export const getContent = (tree, selected) => {
 	return file ? file.content : null
 }
 
+// gather the last DIFF_COUNT unique contents for Time Travel
+export const getContents = (trees, selected) => {
+	const contents = trees.map(tree => getContent(tree, selected)).filter(x => x)
+	return [...new Set(contents)]
+}
