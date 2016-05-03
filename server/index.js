@@ -50,9 +50,10 @@ exports.start = (options) => {
 	createWatcher(DIR, tree, broadcastTree)
 
 	io.on('connection', (socket) => {
+		const getConnected = () => `${io.engine.clientsCount} connected`
 		const ip = socket.request.connection.remoteAddress
-		debug('connection', ip)
+		debug('connection', getConnected(), ip)
 		broadcastTree(tree)
-		socket.on('disconnect', () => debug('disconnection', ip))
+		socket.on('disconnect', () => debug('disconnection', getConnected(), ip))
 	})
 }
