@@ -7,7 +7,7 @@
 
 ## Use case
 
-![copycast](https://raw.githubusercontent.com/byteclubfr/copycast/master/illustration.png)
+![workshop](https://raw.githubusercontent.com/byteclubfr/copycast/master/illustration.png)
 
 Long code workshops (like a few days) can rapidly turn into hell for trainees.
 
@@ -24,6 +24,9 @@ repeated help of the teacher.
 ### What's inside?
 
 copycast = [file system watcher](https://github.com/paulmillr/chokidar) + [websocket server](https://github.com/socketio/socket.io) + [reactive webclient](https://github.com/cyclejs)
+
+### What does it look like?
+![copycast](https://raw.githubusercontent.com/byteclubfr/copycast/master/copycast.jpg)
 
 ### Here's how it works:
 
