@@ -49,10 +49,10 @@
     "finalhandler": "^0.5.0",
     "git-http-backend": "^1.0.0",
     "localtunnel": "^1.8.1",
-    "minimist": "^1.2.0",
     "parse-domain": "^1.0.0",
     "serve-static": "^1.10.2",
-    "socket.io": "^1.4.5"
+    "socket.io": "^1.4.5",
+    "yargs": "^6.3.0"
   },
   "devDependencies": {
     "@cycle/core": "^6.0.3",
