@@ -8,7 +8,7 @@ const { access } = require('fs')
 const { spawn } = require('child_process')
 
 const { flatten, hasChild } = require('./tree-walker')
-const Zip = require('easy-zip').EasyZip
+const { ZipFile } = require('yazl')
 const gitBackend = require('git-http-backend')
 
 const serve = serveStatic(`${__dirname}/../client`)
@@ -34,10 +34,11 @@ const displayAddresses = (port, gitName) => remoteIPs.forEach(ip => {
 const zipper = tree => (req, res, next) => {
 	if (req.url === '/' + tree.name + '.zip') {
 		const files = flatten(tree, false)
-		const zip = new Zip()
-		zip.batchAdd(files.map(f => ({ source: f, target: f })), () => {
-			zip.writeToResponse(res, tree.name)
-		})
+		const zip = new ZipFile()
+		files.forEach(file => zip.addFile(file, file))
+		zip.outputStream.on('error', next)
+		zip.outputStream.pipe(res)
+		zip.end()
 		return
 	}
 	next()

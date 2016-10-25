@@ -45,14 +45,14 @@
     "chokidar": "^1.4.3",
     "compression": "^1.6.1",
     "debug": "^2.2.0",
-    "easy-zip": "0.0.4",
     "finalhandler": "^0.5.0",
     "git-http-backend": "^1.0.0",
     "localtunnel": "^1.8.1",
     "parse-domain": "^1.0.0",
     "serve-static": "^1.10.2",
     "socket.io": "^1.4.5",
-    "yargs": "^6.3.0"
+    "yargs": "^6.3.0",
+    "yazl": "^2.4.1"
   },
   "devDependencies": {
     "@cycle/core": "^6.0.3",
