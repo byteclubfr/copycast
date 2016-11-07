@@ -40,7 +40,7 @@ pre {
 /* header */
 
 .crumbs {
-	align-items: center;
+	align-items: flex-end;
 	display: flex;
 	height: 2em;
 	padding: .5vw;

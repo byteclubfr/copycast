@@ -115,14 +115,17 @@ const EditorHeaderButtons = ({ sel, filename, markdownPreview }) => {
 	return [
 		a('.download', {
 			download: filename,
-			href: '/download/' + sel.split('|').slice(1).join('/')
-		}, [Octicon('cloud-download'), 'Download file']),
+			href: '/download/' + sel.split('|').slice(1).join('/'),
+			title: 'Download file'
+		}, [Octicon('cloud-download')]),
 		a('.clipboard', {
-			attributes: { 'data-clipboard-target': '.editor-code' }
-		}, [Octicon('clippy'), 'Copy file']),
+			attributes: { 'data-clipboard-target': '.editor-code' },
+			title: 'Copy file'
+		}, [Octicon('clippy')]),
 		mime.lookup(sel) === 'text/x-markdown'
 			? a(`.markdown-preview.${ markdownPreview ? 'on' : 'off' }`,
-					[Octicon('markdown'), 'Preview'])
+					{ title: 'Preview (Markdown)' },
+					[Octicon('markdown')])
 			: null
 	]
 }
