@@ -1,6 +1,6 @@
 {
   "name": "copycast",
-  "version": "5.2.2",
+  "version": "5.2.3",
   "description": "Live remote copy-pasta explorer for training sessions ",
   "bin": {
     "copycast": "bin/copycast.js"
