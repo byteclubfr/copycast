@@ -55,11 +55,11 @@ const _ignoreToGlobs = (content) => String(content).split('\n')
 
 const flatten = (tree, withRoot) => _flatten(tree, withRoot ? tree.name : '')
 const _flatten = (node, path) => {
-	if (node.children) {
+	if (Array.isArray(node.children)) {
 		return node.children.map(child => _flatten(child, P.join(path, child.name)))
 			// Array of Array of String => Array of String
 			.reduce((arr, curr) => arr.concat(curr), [])
-	} else if (node.content) {
+	} else if (typeof node.content === 'string') {
 		// Single file
 		return [path]
 	}
