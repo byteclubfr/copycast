@@ -4,11 +4,14 @@ import { run } from '@cycle/core'
 import { div, link, makeDOMDriver } from '@cycle/dom'
 import storageDriver from '@cycle/storage'
 
-import { Sidebar, Resizer, Editor } from './components'
 import { hlThemes } from './renderers/hl'
 import getClickIds$ from './utils/dom'
 import { getContents } from './utils/tree-walker'
 import createSocketIODriver from './drivers/cycle-socket.io'
+
+import Sidebar from './components/Sidebar'
+import Resizer from './components/Resizer'
+import Editor from './components/Editor'
 
 import Clipboard from 'clipboard'
 new Clipboard('.clipboard')
@@ -82,6 +85,21 @@ const model = (actions$) => {
 	return Observable.combineLatest(actions$)
 		.map(([ tree, sel, ...x ]) => [ last(tree), sel, getContents(tree, sel), ...x ])
 }
+
+/*
++-----------------+---------------------------+
+| .logo           | .editor-header            |
+|                 |   .crumbs                 |
++-----------------+---------------------------+
+| .tree           | .editor                   |
+|   .dir          |                           |
+|     .file       |                           |
+|                 |                           |
+|                 |                           |
++-----------------+                           |
+| .sidebar-footer |                           |
++-----------------+---------------------------+
+*/
 
 const view = (state$) =>
 	state$.map(([ tree, sel, contents, markdownPreview, selRev, collapsed, conn, hlTheme, sidebarWidth ]) =>
