@@ -90,11 +90,11 @@ const model = (actions$) => {
 +-----------------+---------------------------+
 */
 
-const view = (state$, editorDOM) =>
-	Observable.combineLatest([state$, editorDOM])
-	.map(([ [ tree, sel, , , collapsed, conn, hlTheme, sidebarWidth ], editorVtree ]) =>
+const view = (state$, sidebarDOM, editorDOM) =>
+	Observable.combineLatest([state$, sidebarDOM, editorDOM])
+	.map(([ [ , , , , , , hlTheme ], sidebarVtree, editorVtree ]) =>
 		div('#app', [
-			Sidebar({ tree, sel, collapsed, conn, hlTheme, sidebarWidth }),
+			sidebarVtree,
 			Resizer(),
 			editorVtree,
 			link({ rel: 'stylesheet', href: `hl-themes/${hlTheme}.css` })
@@ -103,8 +103,11 @@ const view = (state$, editorDOM) =>
 export default ({ DOM, socket, storage }) => {
 	const actions$ = intent({ DOM, socket, storage })
 	const state$ = model(actions$)
+
+	const sidebar = Sidebar({ DOM, props$: state$ })
 	const editor = Editor({ DOM, props$: state$ })
-	const vtree$ = view(state$, editor.DOM)
+
+	const vtree$ = view(state$, sidebar.DOM, editor.DOM)
 
 	return {
 		DOM: vtree$,
