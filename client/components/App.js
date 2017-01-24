@@ -96,18 +96,26 @@ const model = (actions$) => {
 +-----------------+---------------------------+
 */
 
-const view = (state$) =>
-	state$.map(([ tree, sel, contents, markdownPreview, selRev, collapsed, conn, hlTheme, sidebarWidth ]) =>
+const view = (state$, editorDOM) =>
+	Observable.combineLatest([state$, editorDOM])
+	.map(([ [ tree, sel, contents, markdownPreview, selRev, collapsed, conn, hlTheme, sidebarWidth ], editorVtree ]) =>
 		div('#app', [
 			Sidebar({ tree, sel, collapsed, conn, hlTheme, sidebarWidth }),
 			Resizer(),
-			Editor({ sel, contents, markdownPreview, selRev }),
+			editorVtree,
 			link({ rel: 'stylesheet', href: `hl-themes/${hlTheme}.css` })
 		]))
 
-export default (sources) => ({
-	DOM: view(model(intent(sources))),
-	// save sidebar <select> value to localStorage
-	storage: sources.DOM.select('.hl-themes').events('change')
-		.map(({ target }) => ({ key: LS_HL_THEME, value: target.value }))
-})
+export default ({ DOM, socket, storage }) => {
+	const actions$ = intent({ DOM, socket, storage })
+	const state$ = model(actions$)
+	const editor = Editor({ DOM, props$: state$ })
+	const vtree$ = view(state$, editor.DOM)
+
+	return {
+		DOM: vtree$,
+		// save sidebar <select> value to localStorage
+		storage: DOM.select('.hl-themes').events('change')
+			.map(({ target }) => ({ key: LS_HL_THEME, value: target.value }))
+	}
+}
