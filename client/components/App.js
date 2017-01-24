@@ -32,12 +32,6 @@ const intent = ({ DOM, socket, storage }) => {
 		socket.get('connect').map(() => true),
 		socket.get('disconnect').map(() => false))
 
-	// Editor Header buttons
-	const markdownPreview$ = DOM.select('.markdown-preview').events('click')
-		.map(() => true)
-		.scan(acc => !acc)
-		.startWith(false)
-
 	const revClick$ = DOM.select('.editor-timeline .last').events('click')
 		.map(ev => ev.target.checked)
 		.startWith(true)
@@ -72,7 +66,7 @@ const intent = ({ DOM, socket, storage }) => {
 	// to refresh elapsed counter regularly
 	const elapsed$ = Observable.timer(0, REFRESH_TIMER)
 
-	return [ tree$, sel$, markdownPreview$, selRev$,
+	return [ tree$, sel$, selRev$,
 		collapsed$, conn$, hlTheme$, sidebarWidth$, elapsed$ ]
 }
 
@@ -98,7 +92,7 @@ const model = (actions$) => {
 
 const view = (state$, editorDOM) =>
 	Observable.combineLatest([state$, editorDOM])
-	.map(([ [ tree, sel, contents, markdownPreview, selRev, collapsed, conn, hlTheme, sidebarWidth ], editorVtree ]) =>
+	.map(([ [ tree, sel, , , collapsed, conn, hlTheme, sidebarWidth ], editorVtree ]) =>
 		div('#app', [
 			Sidebar({ tree, sel, collapsed, conn, hlTheme, sidebarWidth }),
 			Resizer(),

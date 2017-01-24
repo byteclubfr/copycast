@@ -6,9 +6,8 @@ import EditorTimeline from './EditorTimeline'
 
 const view = (props$, editorHeaderButtonsDOM) =>
 	Observable.combineLatest([props$, editorHeaderButtonsDOM])
-	.map(([ [ , sel, contents, markdownPreview, selRev ], editorHeaderButtonsVtree ]) => {
+	.map(([ [ , sel, contents, selRev ], editorHeaderButtonsVtree ]) => {
 		const parts = sel ? sel.split('|') : []
-		const filename = parts[parts.length - 1]
 
 		return header('.editor-header', [
 			h2('.crumbs', parts.join(' ❭ ')),
@@ -22,7 +21,8 @@ export default ({ DOM, props$ }) => {
 	const vtree$ = view(props$, editorHeaderButtons.DOM)
 
 	return {
-		DOM: vtree$
+		DOM: vtree$,
+		value: editorHeaderButtons.value
 	}
 }
 

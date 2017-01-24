@@ -7,14 +7,15 @@ import { hl } from '../renderers/hl'
 import markdown from '../renderers/markdown'
 import EditorHeader from './EditorHeader'
 
-const view = (props$, editorHeaderDOM) =>
-	Observable.combineLatest([props$, editorHeaderDOM])
-	.map(([ [ , sel, contents, markdownPreview, selRev ], editorHeaderVtree ]) => {
+const view = (props$, editorHeaderDOM, editorHeaderValue) =>
+	Observable.combineLatest([props$, editorHeaderDOM, editorHeaderValue])
+	.map(([ [ , sel, contents, selRev ], editorHeaderVtree, markdownPreview ]) => {
 		const content = selRev == null ? last(contents) : contents[selRev]
+
 		return main('.main', [
 			editorHeaderVtree,
 			div('.editor', content
-				? ( markdownPreview && mime.lookup(sel) === 'text/x-markdown'
+				? (markdownPreview && mime.lookup(sel) === 'text/x-markdown'
 					? div(markdown(content))
 					: pre(code('.editor-code.hljs', hl(content)))
 				)
@@ -24,7 +25,7 @@ const view = (props$, editorHeaderDOM) =>
 
 export default ({ DOM, props$ }) => {
 	const editorHeader = EditorHeader({ DOM, props$ })
-	const vtree$ = view(props$, editorHeader.DOM)
+	const vtree$ = view(props$, editorHeader.DOM, editorHeader.value)
 
 	return {
 		DOM: vtree$
