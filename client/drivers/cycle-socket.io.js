@@ -2,7 +2,7 @@ import { Observable } from 'rx'
 
 export default function createSocketIODriver() {
 	let socketOptions = {}
-	if (document.location.hostname.match(/\.localtunnel\.me$/)) {
+	if (document.location.hostname.match(/(\.localtunnel\.me|\.ngrok\.io)$/)) {
 		// Websocket transports screws the whole thing when tunnelling through localtunnel
 		socketOptions = { transports: ['polling'] }
 	}
