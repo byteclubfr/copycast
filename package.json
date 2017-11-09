@@ -44,13 +44,13 @@
   "dependencies": {
     "chokidar": "^1.4.3",
     "compression": "^1.7.1",
-    "debug": "^2.2.0",
-    "finalhandler": "^0.5.0",
+    "debug": "^3.1.0",
+    "finalhandler": "^1.1.0",
     "git-http-backend": "^1.0.0",
     "localtunnel": "^1.8.1",
     "parse-domain": "^1.0.0",
     "serve-static": "^1.13.1",
-    "socket.io": "^1.4.5",
+    "socket.io": "^1.7.4",
     "yargs": "^10.0.3",
     "yazl": "^2.4.1"
   },
