@@ -29,7 +29,7 @@ const view = (props$, value$) =>
 				title: 'Copy file'
 			}, Octicon('clippy')),
 
-			mime.lookup(sel) === 'text/x-markdown'
+			mime.lookup(sel) === 'text/markdown'
 				? a(`.markdown-preview.${ markdownPreview ? 'on' : 'off' }`,
 						{ title: 'Preview (Markdown)' },
 						Octicon('markdown'))

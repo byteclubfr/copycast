@@ -15,7 +15,7 @@ const view = (props$, editorHeaderDOM, editorHeaderValue) =>
 		return main('.main', [
 			editorHeaderVtree,
 			div('.editor', content
-				? (markdownPreview && mime.lookup(sel) === 'text/x-markdown'
+				? (markdownPreview && mime.lookup(sel) === 'text/markdown'
 					? div(markdown(content))
 					: pre(code('.editor-code.hljs', hl(content)))
 				)
