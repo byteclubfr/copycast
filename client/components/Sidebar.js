@@ -18,7 +18,7 @@ const view = (props$) =>
 		])
 	)
 
-export default ({ DOM, props$ }) => {
+export default ({ props$ }) => {
 	const vtree$ = view(props$)
 
 	return {
