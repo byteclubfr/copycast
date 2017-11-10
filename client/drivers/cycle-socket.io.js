@@ -12,7 +12,7 @@ export default function createSocketIODriver() {
 
 	// 'connect' and 'disconnect' cannot be implemented just like 'get' as
 	// those events could be emitted BEFORE observable is actually ready
-	const statusSubject = new BehaviorSubject()
+	const statusSubject = new BehaviorSubject({ connected: false, status: 'connecting', error: null })
 	const status$ = statusSubject.asObservable()
 	const watchStatusChange = (status, connected, isErr = false) =>
 		socket.on(status, e => statusSubject.onNext({
