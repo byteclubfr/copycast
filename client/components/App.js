@@ -27,10 +27,10 @@ const intent = ({ DOM, socket, storage }) => {
 			if (acc.length > DIFF_COUNT) acc.shift()
 			return acc
 		}, [])
+
 	// to add visual indicator
-	const conn$ = Observable.merge(
-		socket.get('connect').map(() => true),
-		socket.get('disconnect').map(() => false))
+	const conn$ = socket.status$
+		.map(status => status.connected)
 
 	const revClick$ = DOM.select('.editor-timeline .last').events('click')
 		.map(ev => ev.target.checked)
