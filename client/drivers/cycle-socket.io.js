@@ -29,8 +29,7 @@ export default function createSocketIODriver() {
 	watchStatusChange('reconnect_error', false, true)
 	//watchStatusChange('reconnect_failed', false)
 
-	const get = eventName =>
-		Observable.create(obs => socket.on(eventName, obs.onNext.bind(obs)))
+	const get = eventName => Observable.fromEvent(socket, eventName)
 
 	function publish(messageType, message) {
 		socket.emit(messageType, message)

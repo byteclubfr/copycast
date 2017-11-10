@@ -27,6 +27,7 @@ const intent = ({ DOM, socket, storage }) => {
 			if (acc.length > DIFF_COUNT) acc.shift()
 			return acc
 		}, [])
+		.share()
 
 	// to add visual indicator
 	const conn$ = socket.status$
@@ -56,9 +57,9 @@ const intent = ({ DOM, socket, storage }) => {
 	const mouseMove$ = Observable.fromEvent(document, 'mousemove')
 	const mouseDown$ =  DOM.select('.resizer').events('mousedown')
 	const mouseUp$ =  DOM.select('#app').events('mouseup')
-	const sidebarWidth$ = mouseDown$.flatMap(() =>
-		mouseMove$.map(({ clientX }) => clientX).takeUntil(mouseUp$)
-	).startWith(230)
+	const sidebarWidth$ = mouseDown$
+		.flatMap(() => mouseMove$.map(({ clientX }) => clientX).takeUntil(mouseUp$))
+		.startWith(230)
 
 	const hlTheme$ = storage.local.getItem(LS_HL_THEME)
 		.map(v => v === null ? hlThemes[34] : v) // default to GitHub theme
