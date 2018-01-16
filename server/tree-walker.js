@@ -7,7 +7,7 @@ const createFile = (name, content) => ({ name, content })
 
 const getChildren = (tree, path) => {
 	let children = tree.children
-	path.split('/').forEach((dir) => {
+	path.split(P.sep).forEach((dir) => {
 		const child = children.find(c => c.name === dir)
 		if (child) children = child.children
 	})
